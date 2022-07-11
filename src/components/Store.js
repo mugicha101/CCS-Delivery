@@ -1,6 +1,6 @@
 function Store() {
     return (<div>
-        <p2>orz</p2>
+        <h2>store</h2>
     </div>)
 }
 

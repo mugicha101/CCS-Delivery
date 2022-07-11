@@ -1,0 +1,98 @@
+#NavBar {
+    background-color: blue;
+    height: fit-content;
+    transition: all 0.2s linear; 
+    height: 30px;
+    display: flex;
+    align-items: stretch;
+}
+
+#NavBar:hover {
+    height: 40px;
+}
+
+#tabsList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: green;
+    display: flex;
+    align-items: stretch;
+}
+
+#tabsList li {
+    float: left;
+}
+
+#dropdownList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: green;
+}
+
+#navItem {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    background-color: aqua;
+}
+
+#navButton {
+    display: block;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    background-color: red;
+    transition: all 0.2s linear;
+    width: 100px;
+    height: 100%;
+    display: table;
+}
+
+#navSpan {
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    display: inline-block;
+    margin: auto;
+    line-height: normal;
+    display:table-cell;
+    vertical-align:middle;
+}
+
+#navButton:hover {
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}
+
+@media only screen and (min-width: 740px) {
+    #dropdown {
+        display: none;
+    }
+    #tabs {
+        width: fit-content;
+        background-color: orange;
+        display: flex;
+        align-items: stretch;
+        height: 100%;
+    }
+}
+
+@media only screen and (max-width: 739px) {
+    #tabs {
+        display: none;
+    }
+    #dropdown {
+        position: absolute;
+        top: 0px;
+        width: fit-content;
+        background-color: yellow;
+        display: flex;
+        align-items: stretch;
+    }
+}
+
