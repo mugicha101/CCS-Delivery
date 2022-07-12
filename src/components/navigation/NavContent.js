@@ -15,11 +15,11 @@ function NavContent() {
                             <span id="navSpan">HOME</span>
                         </Link>
                     </li>
-                    <li id="navItem">
+                    {user && <li id="navItem">
                         <Link id="navButton" to="../store">
                             <span id="navSpan">STORE</span>
                         </Link>
-                    </li>
+                    </li>}
                     <li id="navItem">
                         <div id="navButton" onClick={(e) => handleLogin(e)}>
                             <span id="navSpan">{user? "SIGN OUT" : "SIGN IN"}</span>
