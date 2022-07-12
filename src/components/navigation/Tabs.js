@@ -2,8 +2,8 @@ import NavContent from './NavContent';
 import './NavBar.css';
 
 function Tabs() {
-    return (<div id="tabs">
-        <ul id="tabsList"><NavContent /></ul>
+    return (<div class="tabs">
+        <ul class="tabsList"><NavContent /></ul>
     </div>)
 }
 

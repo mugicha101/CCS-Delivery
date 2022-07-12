@@ -2,8 +2,8 @@ import NavContent from './NavContent';
 import './NavBar.css';
 
 function Dropdown() {
-    return (<div id="dropdown">
-        <ul id="dropdownList"><NavContent /></ul>
+    return (<div class="dropdown">
+        <ul class="dropdownList"><NavContent /></ul>
     </div>)
 }
 

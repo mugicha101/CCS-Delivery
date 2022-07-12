@@ -1,4 +1,4 @@
-#NavBar {
+.NavBar {
     background-color: blue;
     height: fit-content;
     transition: all 0.2s linear; 
@@ -7,11 +7,11 @@
     align-items: stretch;
 }
 
-#NavBar:hover {
+.NavBar:hover {
     height: 40px;
 }
 
-#tabsList {
+.tabsList {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -21,11 +21,11 @@
     align-items: stretch;
 }
 
-#tabsList li {
+.tabsList li {
     float: left;
 }
 
-#dropdownList {
+.dropdownList {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -33,14 +33,14 @@
     background-color: green;
 }
 
-#navItem {
+.navItem {
     display: flex;
     align-items: stretch;
     height: 100%;
     background-color: aqua;
 }
 
-#navButton {
+.navButton {
     display: block;
     color: white;
     text-align: center;
@@ -52,7 +52,7 @@
     display: table;
 }
 
-#navSpan {
+.navSpan {
     font-weight: bold;
     font-size: 15px;
     text-align: center;
@@ -63,17 +63,21 @@
     vertical-align:middle;
 }
 
-#navButton:hover {
+.navButton:hover {
     background-color: white;
     color: black;
     cursor: pointer;
 }
 
+.loginButton {
+    background-color: purple;
+}
+
 @media only screen and (min-width: 740px) {
-    #dropdown {
+    .dropdown {
         display: none;
     }
-    #tabs {
+    .tabs {
         width: fit-content;
         background-color: orange;
         display: flex;
@@ -83,10 +87,10 @@
 }
 
 @media only screen and (max-width: 739px) {
-    #tabs {
+    .tabs {
         display: none;
     }
-    #dropdown {
+    .dropdown {
         position: absolute;
         top: 0px;
         width: fit-content;

@@ -1,4 +1,4 @@
-import {GoogleAuthProvider, signInWithPopup, getAuth, signInWithRedirect, getRedirectResult, onAuthStateChanged, reload} from 'firebase/auth';
+import {GoogleAuthProvider, signInWithPopup, getAuth, signInWithRedirect, reload} from 'firebase/auth';
 import { getDatabase, ref, get, set, child } from "firebase/database";
 import {app} from '../../firebase.js'
 
@@ -7,21 +7,6 @@ const auth = getAuth();
 
 const db = getDatabase();
 const dbRef = ref(db);
-
-let user = auth.currentUser? auth.currentUser : null;
-
-onAuthStateChanged(auth, (u) => {
-  if (u) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      // ...
-      user = u;
-  } else {
-      // User is signed out
-      // ...
-      user = null;
-  }
-});
 
 function set_user_data(user, data) {
   set(ref(db, 'users/' + user.uid), data);
@@ -37,7 +22,7 @@ async function get_user_data(user) {
   })
 }
 
-function handleLogin(e) {
+function handleLogin(e, user) {
   if (user)
       handleSignOut(e);
   else
@@ -53,20 +38,25 @@ function handleSignOut(e) {
     // Sign-out successful.
   }).catch((error) => {
     // An error happened.
+    console.log(error);
   });
-  window.location.reload();
+  //window.location.reload();
 }
 
-function LoginButton() {
+function LoginButton({user}) {
   return (
-    <div>
-        <button id="loginButton" onClick={(e) => handleLogin(e)}>
-            {user? "Logout" : "Login"}
-        </button>
-        <img src={user? user.picture : ""}></img>
-        <h3>{user? user.name : ""}</h3>
+    <div class="navButton loginButton" onClick={(e) => handleLogin(e, user)}>
+      <span class="navSpan">{user? "SIGN OUT" : "SIGN IN"}</span>
     </div>
+    // <div>
+      
+    //     <button id="loginButton" onClick={(e) => handleLogin(e)}>
+    //         {user? "Logout" : "Login"}
+    //     </button>
+    //     <img src={user ? user.picture : ""}></img>
+    //     <h3>{user ? user.name : ""}</h3>
+    // </div>
   );
 }
 
-export {handleLogin};
+export { LoginButton };
