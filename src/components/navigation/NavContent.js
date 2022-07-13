@@ -1,14 +1,12 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import { LoginButton } from "./LoginButton";
-import { app } from '../../firebase.js';
 import './NavBar.css';
 
 function NavContent() {
     return (
         <UserContext.Consumer>
-            {(user) => (
+            {({isLoaded, user}) => (
                 <div class="NavContent">
                     <li class="navItem">
                         <Link class="navButton" to="../">
@@ -21,7 +19,7 @@ function NavContent() {
                         </Link>
                     </li>}
                     <li class="navItem">
-                        <LoginButton user={user}/>
+                        <LoginButton isLoaded={isLoaded} user={user}/>
                     </li>
                 </div>
             )}
