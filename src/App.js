@@ -5,7 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 import NavBar from './components/navigation/NavBar'
 
 import Home from './components/Home';
-import Store from './components/Store';
+import Store from './components/store/Store';
 
 import {onAuthStateChanged, getAuth} from 'firebase/auth';
 

@@ -1,0 +1,16 @@
+.StoreItem {
+    background-color: white;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+}
+
+.StockExists {
+    color: green;
+    font-weight: bold;
+}
+
+.StockNone {
+    color: red;
+    font-weight: bold;
+}
