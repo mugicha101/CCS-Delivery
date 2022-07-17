@@ -8,7 +8,7 @@ function StoreItem({name="", description="", cost=0, amount=0, retrieval_method=
       <p>Cost per {unit}: ${cost}</p>
       <p>description: {description}</p>
       <p>Retrieval Method: {retrieval_method}</p>
-      <p class={`${amount === 0? "StockNone" : "StockExists"}`}>{amount === 0? "Out of Stock" : `In Stock (${amount} left)`}</p>
+      <p class={`${amount === 0? "stockNone" : "stockExists"}`}>{amount === 0? "Out of Stock" : `In Stock (${amount} left)`}</p>
     </div>
   );
 }
