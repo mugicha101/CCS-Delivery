@@ -8,20 +8,6 @@ const auth = getAuth();
 const db = getDatabase();
 const dbRef = ref(db);
 
-function set_user_data(user, data) {
-    set(ref(db, 'users/' + user.uid), data);
-}
-
-async function get_user_data(user) {
-    get(ref(db, 'users/' + user.uid)).then((snapshot) => {
-        if (snapshot.exists()) {
-            console.log(snapshot.val());
-        } else {
-            return null;
-        }
-    })
-}
-
 function handleLogin(e, user) {
     if (user)
         handleSignOut(e);

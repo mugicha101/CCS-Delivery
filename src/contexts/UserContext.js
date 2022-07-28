@@ -1,5 +1,6 @@
 import React from "react";
 export const UserContext = React.createContext({
-    isLoaded: false, //true if auth state is known
-    user: null //user object
+    isLoaded: false, // true if auth state is known
+    user: null, // user object
+    data: null // user data from firebase
 })
