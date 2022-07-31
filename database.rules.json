@@ -1,0 +1,59 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin' || root.child('users').child(auth.uid).child('role').val() == 'accountant'",
+        "role": {
+        	".validate": true,
+          ".write": "(auth != null && auth.uid == $uid && !data.exists() && newData.val() == 'user') || (auth != null && root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        },
+        "balance": {
+          ".validate": true,
+          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'accountant'",
+        },
+        "email": {
+          ".validate": true,
+          ".write": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin')"
+        },
+        "name": {
+          ".validate": true,
+          ".write": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin')"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "store": {
+      ".read": "auth != null",
+      "$id": {
+        ".read": "auth != null",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'service'",
+        "name": {
+          ".validate": true
+        },
+        "amount": {
+          ".validate": true
+        },
+        "cost": {
+          ".validate": true
+        },
+        "vendor": {
+          ".validate": true
+        },
+        "unit": {
+          ".validate": true
+        },
+        "retrieval_method": {
+          ".validate": true
+        },
+        "description": {
+          ".validate": true
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    }
+  }
+}
