@@ -10,6 +10,13 @@ import Store from './components/store/Store';
 
 import {onAuthStateChanged, getAuth} from 'firebase/auth';
 
+import { initializeApp } from 'firebase/app';
+import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
+
+const functions = getFunctions();
+connectFunctionsEmulator(functions, "localhost", 5001);
+const newUser = httpsCallable(functions, 'newUser');
+
 const db = getDatabase();
 const dbRef = ref(db);
 
@@ -20,7 +27,7 @@ function App() {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        onAuthStateChanged(auth, (u) => {
+        onAuthStateChanged(auth, async (u) => {
             if (u) {
                 setUser(u);
                 get(ref(db, 'users/' + u.uid)).then((snapshot) => {
@@ -28,8 +35,12 @@ function App() {
                         console.log(snapshot.val());
                         setData(snapshot.val());
                     } else {
-                        return null;
+                        // CREATE NEW USER
                     }
+                    newUser()
+                    .then((result) => {
+                        console.log("NEW USER RESULT:", result);
+                    });
                 });
             } else {
                 setUser(null);
