@@ -32,7 +32,8 @@ exports.newUser = functions.https.onCall(async (data, context) => {
             userRef.update({
                 balance: 0,
                 name: context.auth.token.name || "",
-                email: context.auth.token.email || ""
+                email: context.auth.token.email || "",
+                role: "user",
             });
         }
     } catch (e) {
