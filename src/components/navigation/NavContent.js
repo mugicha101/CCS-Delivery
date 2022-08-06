@@ -18,6 +18,21 @@ function NavContent() {
                             <span class="navSpan">STORE</span>
                         </Link>
                     </li>}
+                    {user && <li class="navItem">
+                        <Link class="navButton" to="../cart">
+                            <span class="navSpan">CART</span>
+                        </Link>
+                    </li>}
+                    <li class="navItem">
+                        <Link class="navButton roleButton" to="../balance_editor">
+                            <span class="navSpan">USER BALANCE EDITOR</span>
+                        </Link>
+                    </li>
+                    <li class="navItem">
+                        <Link class="navButton roleButton" to="../balance_editor">
+                            <span class="navSpan">USER ROLE EDITOR</span>
+                        </Link>
+                    </li>
                     <li class="navItem">
                         <LoginButton isLoaded={isLoaded} user={user}/>
                     </li>

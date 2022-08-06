@@ -3,22 +3,28 @@ import { UserContext } from './contexts/UserContext';
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import NavBar from './components/navigation/NavBar'
-import { getDatabase, ref, get, set, child } from "firebase/database";
+import { getDatabase, ref, get, set, child, connectDatabaseEmulator } from "firebase/database";
 
 import Home from './components/Home';
 import Store from './components/store/Store';
+import Cart from './components/cart/Cart';
 
 import {onAuthStateChanged, getAuth} from 'firebase/auth';
 
 import { initializeApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
-
-const functions = getFunctions();
-connectFunctionsEmulator(functions, "localhost", 5001);
-const newUser = httpsCallable(functions, 'newUser');
+import UserBalanceEditor from './components/roles/UserBalanceEditor';
 
 const db = getDatabase();
-const dbRef = ref(db);
+if (window.location.hostname === "localhost") {
+    connectDatabaseEmulator(db, "localhost", 9000);
+}
+
+const functions = getFunctions();
+if (window.location.hostname === "localhost") {
+    connectFunctionsEmulator(functions, "localhost", 5001);
+}
+const newUser = httpsCallable(functions, 'newUser');
 
 function App() {
     const auth = getAuth();
@@ -36,11 +42,11 @@ function App() {
                         setData(snapshot.val());
                     } else {
                         // CREATE NEW USER
+                        newUser()
+                        .then((result) => {
+                            console.log("NEW USER RESULT:", result);
+                        });
                     }
-                    newUser()
-                    .then((result) => {
-                        console.log("NEW USER RESULT:", result);
-                    });
                 });
             } else {
                 setUser(null);
@@ -52,11 +58,13 @@ function App() {
 
     return (
         <main>
-            <UserContext.Provider value={{isLoaded: isLoaded, user: user, data: data}}>
+            <UserContext.Provider value={{isLoaded: isLoaded, user: user, data: data, db: db}}>
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/store" element={<Store isLoaded={isLoaded} user={user}/>} />
+                    <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db}/>} />
+                    <Route path="/cart" element={<Cart isLoaded={isLoaded} user={user} userData={data}/>} />
+                    <Route path="/balance_editor" element={<UserBalanceEditor user={user} userData={data}/>} />
                 </Routes>
             </UserContext.Provider>
         </main>

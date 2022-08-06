@@ -1,12 +1,8 @@
 import {GoogleAuthProvider, signInWithPopup, getAuth, signInWithRedirect, reload} from 'firebase/auth';
-import { getDatabase, ref, get, set, child } from "firebase/database";
 import {app} from '../../firebase.js'
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
-
-const db = getDatabase();
-const dbRef = ref(db);
 
 function handleLogin(e, user) {
     if (user)
