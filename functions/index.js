@@ -123,7 +123,6 @@ exports.changeUserBalance = functions.https.onCall(async (data={uid: "", amount:
         // get time
         let time = Date.now();
         while (time in value.records) {
-            await new Promise(r => setTimeout(r, 100));
             time = Date.now();
         }
 
