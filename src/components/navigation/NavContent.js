@@ -20,6 +20,22 @@ function NavContent() {
                         </Link>
                     </li>}
                     <li style={{flexGrow: 1}}/>
+                    
+                    {user && <li class="navItem">
+                        <Link class="navButton" to="../cart">
+                            <span class="navSpan">CART</span>
+                        </Link>
+                    </li>}
+                    <li class="navItem">
+                        <Link class="navButton roleButton" to="../balance_editor">
+                            <span class="navSpan">USER BALANCE EDITOR</span>
+                        </Link>
+                    </li>
+                    <li class="navItem">
+                        <Link class="navButton roleButton" to="../balance_editor">
+                            <span class="navSpan">USER ROLE EDITOR</span>
+                        </Link>
+                    </li>
                     <li class="loginItem">
                         <LoginButton isLoaded={isLoaded} user={user}/>
                     </li>

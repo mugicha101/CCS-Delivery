@@ -49,6 +49,10 @@
     display: table;
 }
 
+.roleButton {
+    background-color: black !important;
+}
+
 .navSpan {
     font-weight: bold;
     font-size: 15px;
