@@ -16,12 +16,12 @@ import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/
 import UserBalanceEditor from './components/roles/UserBalanceEditor';
 
 const db = getDatabase();
-if (window.location.hostname === "localhost") {
+if (window.location.hostname === "localhost" && window.location.port === "5000") {
     connectDatabaseEmulator(db, "localhost", 9000);
 }
 
 const functions = getFunctions();
-if (window.location.hostname === "localhost") {
+if (window.location.hostname === "localhost" && window.location.port === "5000") {
     connectFunctionsEmulator(functions, "localhost", 5001);
 }
 const newUser = httpsCallable(functions, 'newUser');
