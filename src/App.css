@@ -1,3 +1,12 @@
+:root {
+    --primary: #EF946C;
+    --secondary: #C4A77D;
+    --tertiary: #70877F;
+    --quaternary: #454372;
+    --quinary: #2F2963;
+    --bg-color: #BBF2FF;
+}
+
 .App {
     text-align: center;
 }
@@ -38,5 +47,5 @@
 }
 
 body {
-    background-color: rgb(203, 242, 255);
+    background-color: var(--bg-color);
 }

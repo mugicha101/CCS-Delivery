@@ -1,14 +1,16 @@
 .NavBar {
-    background-color: blue;
+    background-color: var(--quinary);
     height: fit-content;
-    transition: all 0.2s linear; 
-    height: 30px;
-    display: flex;
-    align-items: stretch;
+    height: 40px;
+    padding: 0% 10% 0% 10%;
 }
 
-.NavBar:hover {
-    height: 40px;
+.tabs {
+    width: fit-content;
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    width: 100%;
 }
 
 .tabsList {
@@ -16,36 +18,31 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: green;
     display: flex;
     align-items: stretch;
+    width: 100%;
 }
 
 .tabsList li {
     float: left;
 }
-
+/* 
 .dropdownList {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: green;
-}
+} */
 
-.navItem {
-    display: flex;
-    align-items: stretch;
-    height: 100%;
-    background-color: aqua;
-}
+/* .loginItem {
+    background-color: var(--primary);
+} */
 
 .navButton {
     display: block;
     color: white;
     text-align: center;
     text-decoration: none;
-    background-color: red;
     transition: all 0.2s linear;
     width: 100px;
     height: 100%;
@@ -70,7 +67,6 @@
 }
 
 .loginButton {
-    background-color: purple;
 }
 
 .balance {
@@ -86,20 +82,11 @@
     padding-right: 10px;
 }
 
-@media only screen and (min-width: 740px) {
-    .dropdown {
-        display: none;
-    }
-    .tabs {
-        width: fit-content;
-        background-color: orange;
-        display: flex;
-        align-items: stretch;
-        height: 100%;
-    }
-}
+/* .dropdown {
+    display: none;
+} */
 
-@media only screen and (max-width: 739px) {
+/* @media only screen and (max-width: 739px) {
     .tabs {
         display: none;
     }
@@ -111,5 +98,5 @@
         display: flex;
         align-items: stretch;
     }
-}
+} */
 

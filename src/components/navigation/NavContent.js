@@ -2,12 +2,13 @@ import { Link } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import { LoginButton } from "./LoginButton";
 import './NavBar.css';
+import theme from '../../theme';
 
 function NavContent() {
     return (
         <UserContext.Consumer>
             {({isLoaded, user}) => (
-                <div class="NavContent">
+                <>
                     <li class="navItem">
                         <Link class="navButton" to="../">
                             <span class="navSpan">HOME</span>
@@ -18,10 +19,11 @@ function NavContent() {
                             <span class="navSpan">STORE</span>
                         </Link>
                     </li>}
-                    <li class="navItem">
+                    <li style={{flexGrow: 1}}/>
+                    <li class="loginItem">
                         <LoginButton isLoaded={isLoaded} user={user}/>
                     </li>
-                </div>
+                </>
             )}
         </UserContext.Consumer>
     )
