@@ -1,42 +1,8 @@
 .NavBar {
     background-color: var(--quinary);
-    height: fit-content;
-    height: 40px;
     padding: 0% 10% 0% 10%;
-}
-
-.tabs {
-    width: fit-content;
     display: flex;
-    align-items: stretch;
-    height: 100%;
-    width: 100%;
 }
-
-.tabsList {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    display: flex;
-    align-items: stretch;
-    width: 100%;
-}
-
-.tabsList li {
-    float: left;
-}
-/* 
-.dropdownList {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-} */
-
-/* .loginItem {
-    background-color: var(--primary);
-} */
 
 .navButton {
     display: block;
@@ -44,23 +10,18 @@
     text-align: center;
     text-decoration: none;
     transition: all 0.2s linear;
-    width: 100px;
-    height: 100%;
-    display: table;
+    padding: 14px 16px;
 }
 
 .roleButton {
-    background-color: black !important;
+    background-color: var(--quaternary);
 }
 
 .navSpan {
     font-weight: bold;
     font-size: 15px;
     text-align: center;
-    display: inline-block;
-    margin: auto;
-    line-height: normal;
-    display:table-cell;
+    display: inline;
     vertical-align:middle;
 }
 
@@ -68,9 +29,6 @@
     background-color: white;
     color: black;
     cursor: pointer;
-}
-
-.loginButton {
 }
 
 .balance {
@@ -86,9 +44,27 @@
     padding-right: 10px;
 }
 
-/* .dropdown {
-    display: none;
-} */
+.dropdown:hover .dropdown-content {
+    display: block;
+    clip-path: inset(0 0 0 0);
+}
+
+.dropdown-content {
+    /* display: none; */
+    position: absolute;
+    overflow: hidden;
+    transition: clip-path 0.5s;
+    clip-path: inset(0 0 100% 0);
+}
+
+.dropdown-content a {
+    padding: 0;
+}
+
+.dropdown-content a span {
+    padding: 14px 16px;
+    display: inline-block
+}
 
 /* @media only screen and (max-width: 739px) {
     .tabs {

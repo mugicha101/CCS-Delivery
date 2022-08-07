@@ -6,9 +6,7 @@ import './NavBar.css';
 function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     return (<div class="NavBar">
-        <div class="tabs">
-            <ul class="tabsList"><NavContent /></ul>
-        </div>
+        <NavContent />
         {/* <Balance /> */}
     </div>)
 }
