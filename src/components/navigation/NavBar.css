@@ -2,6 +2,7 @@
     background-color: var(--quinary);
     padding: 0% 10% 0% 10%;
     display: flex;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 .navButton {
@@ -45,16 +46,15 @@
 }
 
 .dropdown:hover .dropdown-content {
-    display: block;
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(0 -16px -16px -16px);
 }
 
 .dropdown-content {
-    /* display: none; */
     position: absolute;
     overflow: hidden;
     transition: clip-path 0.5s;
-    clip-path: inset(0 0 100% 0);
+    clip-path: inset(0 -16px 100% -16px);
+    box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.2);
 }
 
 .dropdown-content a {
@@ -63,7 +63,7 @@
 
 .dropdown-content a span {
     padding: 14px 16px;
-    display: inline-block
+    display: inline-block;
 }
 
 /* @media only screen and (max-width: 739px) {
