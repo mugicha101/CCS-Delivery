@@ -138,3 +138,69 @@ exports.changeUserBalance = functions.https.onCall(async (data={uid: "", amount:
         return value;
     })
 });
+
+// TODO: TEST FUNCTION, DELETE LATER
+exports.EMULATOR_DB_SETUP = functions.https.onCall(async (data, context) => {
+    admin.database().ref("users").set({
+        rUz2T7OHKwcB3RptZoMsw4lYl9Y2: {
+            name: "Alexander Yoshida",
+            role: "accountant",
+            inventory: {
+                next_id: 0
+            },
+            balance: {
+                amount: 100,
+                records: {
+                    1659903196024: {
+                        amount: 1000,
+                        description: "stonks",
+                        accountant_id: "727"
+                    },
+                    1659903727727: {
+                        amount: -100,
+                        description: "pog",
+                        accountant_id: "123"
+                    }
+                }
+            },
+            email: "alexander.yoshida@gmail.com"
+        },
+    });
+    admin.database().ref("store").set({
+        chen_fumo: {
+            name: "Chen Fumo",
+            amount: 1,
+            cost: 300,
+            description: "based chen",
+            retrieval_method: "delivery",
+            unit: "fumo",
+            vendor: "ZUN"
+        },
+        lenoir_food: {
+            name: "Goat Cheese Strawberry Vinaigrette Pizza",
+            amount: 13,
+            cost: 15,
+            description: "pizza made with goat cheese and a strawberry mix to give the full package of lenoir (may cause unalive)",
+            retrieval_method: "pick-up",
+            unit: "slice",
+            vendor: "Lenoir"
+        },
+        pekora_juice: {
+            name: "Pekora Juice",
+            amount: 0,
+            cost: 33.33,
+            description: "20oz plum juice in a wine bottle",
+            unit: "bottle",
+            vendor: "Usaken"
+        },
+        watermelon: {
+            name: "Watermelon",
+            amount: 5,
+            cost: 5,
+            description: "5lb watermelon",
+            retrieval_method: "pick-up",
+            unit: "melon",
+            vendor: "uber sheep"
+        }
+    });
+})
