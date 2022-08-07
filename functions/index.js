@@ -127,7 +127,7 @@ exports.changeUserBalance = functions.https.onCall(async (data={uid: "", amount:
         }
 
         // add new balance change
-        value.records[time] = {amount: amount, description: description};
+        value.records[time] = {amount: amount, description: description, accountant_uid: context.auth.uid};
 
         // update balance
         let balance = 0;
