@@ -25,6 +25,16 @@ if (window.location.hostname === "localhost" && window.location.port === "5000")
     connectFunctionsEmulator(functions, "localhost", 5001);
 }
 const newUser = httpsCallable(functions, 'newUser');
+const EMULATOR_DB_SETUP = httpsCallable(functions, 'EMULATOR_DB_SETUP');
+
+// initialize emulator data
+if (window.location.hostname === "localhost" && window.location.port === "5000") {
+    get(ref(db, "store")).then((snap) => {
+        if (!snap.exists()) {
+            EMULATOR_DB_SETUP();
+        }
+    });
+}
 
 function App() {
     const auth = getAuth();
