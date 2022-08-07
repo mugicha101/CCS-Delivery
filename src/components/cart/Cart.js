@@ -13,22 +13,21 @@ function Cart({isLoaded, user, userData}) {
     }, [isLoaded, user])
 
     let cartList = [];
-    Object.keys(userData.cart).map((key, index) => {
-        if (key === "next_id")
-            return;
-        let p = {id: key, data: userData.cart[key]};
-        cartList.push(p);
-    })
-    cartList.sort(((a, b) => {
-       return a.id - b.id;
-    }));
+    if (userData.cart != null) {
+        Object.keys(userData.cart).map((key, index) => {
+            let p = {id: key, amount: userData.cart[key]};
+            cartList.push(p);
+        });
+        cartList.sort();
+        console.log(cartList);
+    }
 
     return (<div>
         <h2>cart</h2>
         <div class="cartList">
         {
             cartList.map((p) => {
-                <p>{p.id}</p>
+                return <p>{`${p.id}: ${p.amount}`}</p>
             })
         }
         </div>
