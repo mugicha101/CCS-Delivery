@@ -2,25 +2,79 @@
   "rules": {
     "users": {
       "$uid": {
-        ".read": "auth != null && auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin' || root.child('users').child(auth.uid).child('role').val() == 'accountant'",
-        "role": {
-        	".validate": true,
-          ".write": "(auth != null && auth.uid == $uid && !data.exists() && newData.val() == 'user') || (auth != null && root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        ".read": "auth != null && auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin' || root.child('users').child(auth.uid).child('role').val() == 'accountant' || root.child('users').child(auth.uid).child('role').val() == 'service'",
+        ".write": false,
+          "role": {
+        	".validate": true
         },
         "balance": {
-          ".validate": true,
-          ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'accountant'",
+          "amount": {
+            ".validate": true
+          },
+          "records": {
+            "$time": {
+              "amount": {
+                ".validate": true
+              },
+              "description": {
+                ".validate": true
+              },
+              "accountant_id": {
+                ".validate": true
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
         },
         "email": {
-          ".validate": true,
-          ".write": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin')"
+          ".validate": true
         },
         "name": {
-          ".validate": true,
-          ".write": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin')"
+          ".validate": true
+        },
+        "cart": {
+          ".validate": true
+        },
+        "orders": {
+          ".validate": true
         },
         "$other": {
           ".validate": false
+        }
+      }
+    },
+    "pacc": {
+      "$uid": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'accountant'",
+        ".write": false,
+        "balance": {
+          "amount": {
+            ".validate": true
+          },
+          "records": {
+            "$time": {
+              "amount": {
+                ".validate": true
+              },
+              "description": {
+                ".validate": true
+              },
+              "accountant_id": {
+                ".validate": true
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
         }
       }
     },

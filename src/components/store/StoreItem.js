@@ -15,7 +15,7 @@ function StoreItem({id="", name="", description="", cost=0, amount=0, retrieval_
       <p>description: {description}</p>
       <p>Retrieval Method: {retrieval_method}</p>
       <p class={`${amount === 0? "stockNone" : "stockExists"}`}>{amount === 0? "Out of Stock" : `In Stock (${amount} left)`}</p>
-      <button disabled={amount===0} onClick={(e) => {addToCart({id: id})}}>Add to Cart</button>
+      <button disabled={amount===0} onClick={(e) => {addToCart({id: id, amount: 1})}}>Add to Cart</button>
     </div>
   );
 }

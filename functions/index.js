@@ -2,7 +2,7 @@ const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 const { auth } = require("firebase-admin");
 const { user } = require("firebase-functions/v1/auth");
-const { set } = require("firebase/database");
+const { set, get } = require("firebase/database");
 admin.initializeApp();
 
 // Create and Deploy Your First Cloud Functions
@@ -100,7 +100,7 @@ exports.getUidFromEmail = functions.https.onCall(async (email, context) => {
     return {value: null};
 });
 
-exports.changeUserBalance = functions.https.onCall(async (data={uid: "", amount: 0, description: "", placeholder_account: false}, context) => {
+exports.addBalanceChange = functions.https.onCall(async (data={uid: "", amount: 0, description: "", isPlaceholder: false}, context) => {
     if (!context.auth) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
@@ -113,8 +113,11 @@ exports.changeUserBalance = functions.https.onCall(async (data={uid: "", amount:
         return {error: "role not valid"}
 
     // add balance change
-    let userRef = placeholder_account? admin.database().ref("pacc/" + uid) : admin.database().ref("users/" + uid);
-    await userRef.child("balance").transaction(function(value) {
+    console.log("data:", data);
+    let userRef = data.isPlaceholder? admin.database().ref("pacc/" + data.uid) : admin.database().ref("users/" + data.uid);
+    let balRef = userRef.child("balance");
+    balRef.transaction(function(value) {
+        console.log("value beforehand:", value);
         if (value == null)
             value = {};
         if (value.records == null)
@@ -127,13 +130,14 @@ exports.changeUserBalance = functions.https.onCall(async (data={uid: "", amount:
         }
 
         // add new balance change
-        value.records[time] = {amount: amount, description: description, accountant_uid: context.auth.uid};
+        value.records[time] = {amount: parseInt(data.amount), description: data.description, accountant_uid: context.auth.uid};
 
         // update balance
         let balance = 0;
         for (let change in value.records) {
-            balance += change.amount;
+            balance += value.records[change].amount;
         }
+        console.log("value:", value);
         value.amount = balance;
         return value;
     })
@@ -149,7 +153,7 @@ exports.EMULATOR_DB_SETUP = functions.https.onCall(async (data, context) => {
                 next_id: 0
             },
             balance: {
-                amount: 100,
+                amount: 900,
                 records: {
                     1659903196024: {
                         amount: 1000,

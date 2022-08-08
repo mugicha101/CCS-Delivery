@@ -6,7 +6,7 @@ function Balance() {
         <UserContext.Consumer>
             {({user, data}) => (
             user && <div class="balance">
-                <span class="navSpan">{data && data.balance != null? `balance: ${data.balance}` : "error"}</span>
+                <span class="navSpan">{data && data.balance != null? `balance: ${data.balance.amount}` : "error"}</span>
             </div>
             )}
         </UserContext.Consumer>
