@@ -129,7 +129,6 @@ exports.addBalanceChange = functions.https.onCall(async (data={uid: "", amount: 
     let userRef = data.isPlaceholder? admin.database().ref("pacc/" + data.uid) : admin.database().ref("users/" + data.uid);
     let balRef = userRef.child("balance");
     await balRef.transaction(function(value) {
-        console.log("value beforehand:", value);
         if (value == null)
             value = {};
         if (value.records == null)
@@ -149,7 +148,6 @@ exports.addBalanceChange = functions.https.onCall(async (data={uid: "", amount: 
         for (let change in value.records) {
             balance += value.records[change].amount;
         }
-        console.log("value:", value);
         value.amount = balance;
         return value;
     })

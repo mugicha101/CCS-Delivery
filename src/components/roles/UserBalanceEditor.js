@@ -60,7 +60,7 @@ function UserBalanceEditor() {
         console.log(em);
         setEmail(em);
         setWaiting(true);
-        getUidFromEmail(em).then(async (res) => {
+        await getUidFromEmail(em).then(async (res) => {
             console.log(res.data);
             if (res.data.error != null)
                 return;
