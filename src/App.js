@@ -42,29 +42,39 @@ function App() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [data, setData] = useState(null);
 
+    const updateData = async () => {
+        if (user == null) {
+            setData(null);
+            return;
+        }
+        await get(ref(db, 'users/' + user.uid)).then((snapshot) => {
+            if (snapshot.exists()) {
+                console.log(snapshot.val());
+                setData(snapshot.val());
+            } else {
+                // CREATE NEW USER
+                newUser()
+                .then((result) => {
+                    console.log("NEW USER RESULT:", result);
+                });
+            }
+        });
+    }
+
     useEffect(() => {
         onAuthStateChanged(auth, async (u) => {
             if (u) {
                 setUser(u);
-                get(ref(db, 'users/' + u.uid)).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        console.log(snapshot.val());
-                        setData(snapshot.val());
-                    } else {
-                        // CREATE NEW USER
-                        newUser()
-                        .then((result) => {
-                            console.log("NEW USER RESULT:", result);
-                        });
-                    }
-                });
             } else {
                 setUser(null);
-                setData(null);
             }
             setIsLoaded(true);
         });
     }, [])
+
+    useEffect(() => {
+        updateData();
+    }, [user])
 
     return (
         <main>
@@ -72,7 +82,7 @@ function App() {
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db}/>} />
+                    <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db} updateData={updateData}/>} />
                     <Route path="/cart" element={<Cart isLoaded={isLoaded} user={user} userData={data}/>} />
                     <Route path="/balance_editor" element={<UserBalanceEditor user={user} userData={data}/>} />
                 </Routes>

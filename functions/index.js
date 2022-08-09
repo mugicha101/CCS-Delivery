@@ -79,7 +79,7 @@ exports.addToCart = functions.https.onCall(async (data={id: "", amount: 0}, cont
     if (userData == null)
         return;
     let itemRef = userRef.child("cart").child(data.id);
-    itemRef.transaction(function(value) {
+    await itemRef.transaction(function(value) {
         return value + data.amount;
     })
 });

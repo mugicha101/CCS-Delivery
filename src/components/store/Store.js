@@ -5,7 +5,7 @@ import { getDatabase, ref, get, set, child } from "firebase/database";
 import StoreItem from "./StoreItem";
 import "./Store.css";
 
-function Store({isLoaded, user, db}) {
+function Store({isLoaded, user, db, updateData}) {
     const [products, setProducts] = useState({});
 
     let navigate = useNavigate();
@@ -42,7 +42,7 @@ function Store({isLoaded, user, db}) {
         <h2>store</h2>
         <div class="productGrid">
         {productList.map((p) => {
-            return <StoreItem id={p.id} name={p.name} description={p.description} cost={p.cost} amount={p.amount} retrieval_method={p.retrieval_method} unit={p.unit} vendor={p.vendor}/>
+            return <StoreItem updateData={updateData} id={p.id} name={p.name} description={p.description} cost={p.cost} amount={p.amount} retrieval_method={p.retrieval_method} unit={p.unit} vendor={p.vendor}/>
         })}
         </div>
     </div>)

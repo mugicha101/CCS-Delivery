@@ -13,7 +13,7 @@ function Cart({isLoaded, user, userData}) {
     }, [isLoaded, user])
 
     let cartList = [];
-    if (userData.cart != null) {
+    if (userData != null && userData.cart != null) {
         Object.keys(userData.cart).map((key, index) => {
             let p = {id: key, amount: userData.cart[key]};
             cartList.push(p);
