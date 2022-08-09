@@ -50,6 +50,18 @@ exports.newUser = functions.https.onCall(async (data, context) => {
                 }
             });
         }
+        
+        // check placeholder accounts for matching data
+        let paccRef = admin.database().ref("pacc/" + context.auth.token.email.replace(/\./g, "_"));
+        snap = await paccRef.once("value");
+        let paccData = snap.val();
+        if (paccData != null) { // pacc exists
+            console.log("IMPORT PACC DATA");
+            await userRef.update({
+                balance: paccData.balance
+            })
+            await paccRef.remove();
+        }
     } catch (e) {
         return {error: e};
     }
@@ -116,7 +128,7 @@ exports.addBalanceChange = functions.https.onCall(async (data={uid: "", amount: 
     console.log("data:", data);
     let userRef = data.isPlaceholder? admin.database().ref("pacc/" + data.uid) : admin.database().ref("users/" + data.uid);
     let balRef = userRef.child("balance");
-    balRef.transaction(function(value) {
+    await balRef.transaction(function(value) {
         console.log("value beforehand:", value);
         if (value == null)
             value = {};
