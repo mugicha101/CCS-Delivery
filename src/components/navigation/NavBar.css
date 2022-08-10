@@ -8,15 +8,20 @@
 .navButton {
     display: block;
     color: white;
+    background-color: var(--quinary);
     text-align: center;
     text-decoration: none;
     transition: all 0.2s linear;
     padding: 14px 16px;
 }
 
-.roleButton {
+.selected {
     background-color: var(--quaternary);
 }
+
+/* .roleButton {
+    background-color: var(--quaternary);
+} */
 
 .navSpan {
     font-weight: bold;

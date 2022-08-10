@@ -1,8 +1,17 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import { LoginButton } from "./LoginButton";
 import './NavBar.css';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
+function NavButton({className, to, name}) {
+    if (!className) {
+        className = ""
+    }
+    return <NavLink className={({isActive}) => "navButton " + className + (isActive && " selected")} to={to}>
+        <span class="navSpan">{name}</span>
+    </NavLink>
+}
 
 
 function NavContent() {
@@ -10,29 +19,19 @@ function NavContent() {
         <UserContext.Consumer>
             {({isLoaded, user}) => (
                 <>
-                    <Link class="navButton" to="../">
-                        <span class="navSpan">HOME</span>
-                    </Link>
-                    {user && <Link class="navButton" to="../store">
-                        <span class="navSpan">STORE</span>
-                    </Link>}
-                    {user && <Link class="navButton" to="../cart">
-                        <span class="navSpan">CART</span>
-                    </Link>}
+                    <NavButton to="../" name="HOME"/>
+                    {user && <NavButton to="../store" name="STORE"/>}
+                    {user && <NavButton to="../cart" name="CART"/>}
 
-                    <div style={{flexGrow: 1}}/>
+                    <div style={{flexGrow: 1}}/> {/*Pushes everything to the sides*/}
 
                     <div class="dropdown">
                         <a class="navButton roleButton">
                             <span class="navSpan">ADMIN</span><ArrowDropDownIcon sx={{fontSize: 25, verticalAlign: "middle"}}/>
                         </a>
                         <div class="dropdown-content">
-                            <Link class="navButton roleButton" to="../balance_editor">
-                                <span class="navSpan">BALANCE EDITOR</span>
-                            </Link>
-                            <Link class="navButton roleButton" to="../balance_editor">
-                                <span class="navSpan">ROLE EDITOR</span>
-                            </Link>
+                            <NavButton className="roleButton" to="../balance_editor" name="BALANCE EDITOR"/>
+                            <NavButton className="roleButton" to="../balance_editor" name="ROLE EDITOR"/>
                         </div>
                     </div>
                     
