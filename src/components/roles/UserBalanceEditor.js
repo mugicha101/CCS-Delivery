@@ -4,14 +4,10 @@ import { useContext, useState } from "react";
 import {UserContext} from "../../contexts/UserContext";
 import UserSearch from "./UserSearch";
 
-const functions = getFunctions();
-if (window.location.hostname === "localhost") {
-    connectFunctionsEmulator(functions, "localhost", 5001);
-}
-const getUidFromEmail = httpsCallable(functions, 'getUidFromEmail');
-const addBalanceChange = httpsCallable(functions, 'addBalanceChange');
-
 function UserBalanceEditor() {
+    const getUidFromEmail = httpsCallable(useContext(UserContext).functions, 'getUidFromEmail');
+    const addBalanceChange = httpsCallable(useContext(UserContext).functions, 'addBalanceChange');
+
     const [recordsList, setRecordsList] = useState([]);
     const [waiting, setWaiting] = useState(false);
     const [isPlaceholder, setIsPlaceholder] = useState(false);

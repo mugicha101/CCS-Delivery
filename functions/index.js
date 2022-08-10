@@ -4,7 +4,7 @@ const serviceAccount = require('./ccs-houqin-firebase-adminsdk.json');
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://ccs-houqin-default-rtdb.firebaseio.com"
-  });
+});
 
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions

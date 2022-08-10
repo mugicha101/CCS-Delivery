@@ -1,15 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import {UserContext} from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import {app} from '../../firebase.js';
 import { getDatabase, ref, get, set, child } from "firebase/database";
+import CartItem from "./CartItem.js";
 
 function Cart({isLoaded, user, userData}) {
     let navigate = useNavigate();
+    
+    const [storeData, setStoreData] = useState({})
+    
+    const db = useContext(UserContext).db;
+
+    const loadStore = async () => {
+        let storeRef = ref(db, "store");
+        let snap = await get(storeRef);
+        if (snap.exists()) {
+            setStoreData(snap.val());
+        }
+    }
 
     useEffect(() => {
         if (isLoaded && !user) {
             navigate("..", {replace: true});
+            return;
         }
+        loadStore();
     }, [isLoaded, user])
 
     let cartList = [];
@@ -27,9 +43,11 @@ function Cart({isLoaded, user, userData}) {
         <div class="cartList">
         {
             cartList.map((p) => {
-                return <p>{`${p.id}: ${p.amount}`}</p>
+                let storeItem = storeData[p.id];
+                return <CartItem itemData={storeItem} amount={p.amount}/>
             })
         }
+        <button>Check Out</button>
         </div>
     </div>)
 }

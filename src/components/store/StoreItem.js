@@ -1,12 +1,11 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
-
-const functions = getFunctions();
-connectFunctionsEmulator(functions, "localhost", 5001);
-const addToCart = httpsCallable(functions, 'addToCart');
+import { UserContext } from '../../contexts/UserContext';
 
 function StoreItem({updateData, id="", name="", description="", cost=0, amount=0, retrieval_method="", unit="", vendor=""}) {
+  const addToCart = httpsCallable(useContext(UserContext).functions, 'addToCart');
+
   return (
     <div class="StoreItem">
       <h2>{name}</h2>

@@ -18,11 +18,13 @@ import UserBalanceEditor from './components/roles/UserBalanceEditor';
 const db = getDatabase();
 if (window.location.hostname === "localhost" && window.location.port === "5000") {
     connectDatabaseEmulator(db, "localhost", 9000);
+    console.log("emulator database connected");
 }
 
 const functions = getFunctions();
 if (window.location.hostname === "localhost" && window.location.port === "5000") {
     connectFunctionsEmulator(functions, "localhost", 5001);
+    console.log("emulator functions connected");
 }
 const newUser = httpsCallable(functions, 'newUser');
 const EMULATOR_DB_SETUP = httpsCallable(functions, 'EMULATOR_DB_SETUP');
@@ -78,11 +80,11 @@ function App() {
 
     return (
         <main>
-            <UserContext.Provider value={{isLoaded: isLoaded, user: user, data: data, db: db}}>
+            <UserContext.Provider value={{isLoaded: isLoaded, user: user, data: data, db: db, functions: functions}}>
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db} updateData={updateData}/>} />
+                    <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db} updateData={updateData ?? function() {}}/>} />
                     <Route path="/cart" element={<Cart isLoaded={isLoaded} user={user} userData={data}/>} />
                     <Route path="/balance_editor" element={<UserBalanceEditor user={user} userData={data}/>} />
                 </Routes>
