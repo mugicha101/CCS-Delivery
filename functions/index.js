@@ -1,9 +1,10 @@
 const functions = require("firebase-functions");
 const admin = require('firebase-admin');
-const { auth } = require("firebase-admin");
-const { user } = require("firebase-functions/v1/auth");
-const { set, get } = require("firebase/database");
-admin.initializeApp();
+const serviceAccount = require('./ccs-houqin-firebase-adminsdk.json');
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://ccs-houqin-default-rtdb.firebaseio.com"
+  });
 
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
