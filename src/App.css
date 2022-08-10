@@ -49,3 +49,7 @@
 body {
     background-color: var(--bg-color);
 }
+
+.wrapper {
+    padding: 0 10% 40px 10%;
+}
