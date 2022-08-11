@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {app} from '../../firebase.js';
 import { getDatabase, ref, get, set, child } from "firebase/database";
 import StoreItem from "./StoreItem";
+import { Grid } from "@mui/material";
 import "./Store.css";
 
 function Store({isLoaded, user, db, updateData}) {
@@ -40,11 +41,11 @@ function Store({isLoaded, user, db, updateData}) {
 
     return (<div>
         <h2>store</h2>
-        <div class="productGrid">
+        <Grid container spacing={3}>
         {productList.map((p) => {
             return <StoreItem updateData={updateData} id={p.id} name={p.name} description={p.description} cost={p.cost} amount={p.amount} retrieval_method={p.retrieval_method} unit={p.unit} vendor={p.vendor}/>
         })}
-        </div>
+        </Grid>
     </div>)
 }
 

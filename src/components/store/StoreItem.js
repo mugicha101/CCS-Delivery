@@ -1,4 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
+import { Grid } from "@mui/material";
 
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
 import { UserContext } from '../../contexts/UserContext';
@@ -7,6 +8,7 @@ function StoreItem({updateData, id="", name="", description="", cost=0, amount=0
   const addToCart = httpsCallable(useContext(UserContext).functions, 'addToCart');
 
   return (
+<Grid item xs={12} sm={6} md={4}>
     <div class="StoreItem">
       <h2>{name}</h2>
       <h3>vendor: {vendor}</h3>
@@ -21,6 +23,7 @@ function StoreItem({updateData, id="", name="", description="", cost=0, amount=0
         });
       }}>Add to Cart</button>
     </div>
+  </Grid>
   );
 }
 

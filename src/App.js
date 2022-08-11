@@ -81,13 +81,15 @@ function App() {
     return (
         <main>
             <UserContext.Provider value={{isLoaded: isLoaded, user: user, data: data, db: db, functions: functions}}>
-                <NavBar />
+            <NavBar />
+            <div class="wrapper">
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db} updateData={updateData ?? function() {}}/>} />
                     <Route path="/cart" element={<Cart isLoaded={isLoaded} user={user} userData={data} updateData={updateData ?? function() {}}/>} />
                     <Route path="/balance_editor" element={<UserBalanceEditor user={user} userData={data}/>} />
                 </Routes>
+            </div>
             </UserContext.Provider>
         </main>
     );
