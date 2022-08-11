@@ -5,7 +5,7 @@ import {app} from '../../firebase.js';
 import { getDatabase, ref, get, set, child } from "firebase/database";
 import CartItem from "./CartItem.js";
 
-function Cart({isLoaded, user, userData}) {
+function Cart({isLoaded, user, userData, updateData}) {
     let navigate = useNavigate();
     
     const [storeData, setStoreData] = useState({})
@@ -40,11 +40,11 @@ function Cart({isLoaded, user, userData}) {
 
     return (<div>
         <h2>cart</h2>
-        <div class="cartList">
+        <div className="cartList">
         {
             cartList.map((p) => {
                 let storeItem = storeData[p.id];
-                return <CartItem itemData={storeItem} amount={p.amount}/>
+                return <CartItem id={p.id} itemData={storeItem} amount={p.amount} key={p.name} updateData={updateData}/>
             })
         }
         <button>Check Out</button>

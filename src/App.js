@@ -85,7 +85,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db} updateData={updateData ?? function() {}}/>} />
-                    <Route path="/cart" element={<Cart isLoaded={isLoaded} user={user} userData={data}/>} />
+                    <Route path="/cart" element={<Cart isLoaded={isLoaded} user={user} userData={data} updateData={updateData ?? function() {}}/>} />
                     <Route path="/balance_editor" element={<UserBalanceEditor user={user} userData={data}/>} />
                 </Routes>
             </UserContext.Provider>

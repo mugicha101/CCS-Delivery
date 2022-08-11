@@ -68,7 +68,7 @@ exports.newUser = functions.https.onCall(async (data, context) => {
     }
 });
 
-exports.addToCart = functions.https.onCall(async (data={id: "", amount: 0}, context) => {
+exports.addToCart = functions.https.onCall(async (data={id: "", amount: 0, relative: true}, context) => {
     if (!context.auth) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
@@ -81,7 +81,10 @@ exports.addToCart = functions.https.onCall(async (data={id: "", amount: 0}, cont
         return;
     let itemRef = userRef.child("cart").child(data.id);
     await itemRef.transaction(function(value) {
-        return value + data.amount;
+        if (!value || !data.relative) value = 0;
+        value += data.amount;
+        if (value <= 0) return null;
+        else return value;
     })
 });
 
