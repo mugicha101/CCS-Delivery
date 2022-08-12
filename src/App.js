@@ -14,6 +14,7 @@ import {onAuthStateChanged, getAuth} from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
 import UserBalanceEditor from './components/roles/UserBalanceEditor';
+import UserRoleEditor from './components/roles/UserRoleEditor';
 
 const db = getDatabase();
 if (window.location.hostname === "localhost" && window.location.port === "5000") {
@@ -88,6 +89,7 @@ function App() {
                     <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db} updateData={updateData ?? function() {}}/>} />
                     <Route path="/cart" element={<Cart isLoaded={isLoaded} user={user} userData={data} updateData={updateData ?? function() {}}/>} />
                     <Route path="/balance_editor" element={<UserBalanceEditor user={user} userData={data}/>} />
+                    <Route path="/role_editor" element={<UserRoleEditor user={user} userData={data}></UserRoleEditor>} />
                 </Routes>
             </div>
             </UserContext.Provider>

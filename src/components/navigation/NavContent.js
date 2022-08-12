@@ -31,7 +31,7 @@ function NavContent() {
                         </a>
                         <div class="dropdown-content">
                             <NavButton className="roleButton" to="../balance_editor" name="BALANCE EDITOR"/>
-                            <NavButton className="roleButton" to="../balance_editor" name="ROLE EDITOR"/>
+                            <NavButton className="roleButton" to="../role_editor" name="ROLE EDITOR"/>
                         </div>
                     </div>
                     

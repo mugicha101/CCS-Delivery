@@ -16,6 +16,12 @@ const getRole = async (context) => {
     return userData;
 }
 
+const userExists = async (uid) => {
+    let userRef = admin.database().ref()
+    let snap = await userRef.once("value");
+    return snap.exists();
+}
+
 // performs a transaction
 exports.transaction = functions.https.onCall(async (data={localStoreData: {}, localCartData: {}}, context) => {
     if (!context.auth) {
@@ -210,6 +216,10 @@ exports.addBalanceChange = functions.https.onCall(async (data={uid: "", amount: 
     if (role != "accountant")
         return {error: "role not valid"}
 
+    // ensure user exists if !isPlaceholder
+    if (!isPlaceholder && !userExists(data.uid))
+        return {error: "user does not exist"}
+
     // add balance change
     console.log("data:", data);
     let userRef = data.isPlaceholder? admin.database().ref("pacc/" + data.uid) : admin.database().ref("users/" + data.uid);
@@ -220,6 +230,26 @@ exports.addBalanceChange = functions.https.onCall(async (data={uid: "", amount: 
         balanceChangeHelper(value, data.amount, data.description, context);
         return value;
     })
+});
+
+exports.setUserRole = functions.https.onCall(async (data={uid: "", role: "user"}, context) => {
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+        'while authenticated.');
+    }
+
+    // verify admin role
+    let role = await getRole(context);
+    if (role != "admin")
+        return {error: "role not valid"}
+    
+    // ensure user exists
+    if (!userExists(data.uid))
+        return {error: "user does not exist"}
+    
+    // change role
+    await admin.database().ref("users/" + data.uid + "/role").set(data.role);
 });
 
 // TODO: TEST FUNCTION, DELETE LATER
