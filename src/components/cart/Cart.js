@@ -12,6 +12,7 @@ function Cart({isLoaded, user, userData, updateData}) {
     const transaction = httpsCallable(useContext(UserContext).functions, 'transaction');
     
     const [storeData, setStoreData] = useState({})
+    const [waiting, setWaiting] = useState(false);
     
     const db = useContext(UserContext).db;
 
@@ -65,7 +66,12 @@ function Cart({isLoaded, user, userData, updateData}) {
             })
         }
         <h3>Total Cost: {formatter.format(totalCost)}</h3>
-        <button onClick={(e) => {transaction({localStoreData: storeData, localCartData: userData.cart})} } disabled={!valid}>Finish Order</button>
+        <button onClick={async (e) => {
+            setWaiting(true);
+            await transaction({localStoreData: storeData, localCartData: userData.cart});
+            await updateData();
+            setWaiting(false);
+        } } disabled={!valid || waiting}>Finish Order</button>
         </div>
     </div>)
 }

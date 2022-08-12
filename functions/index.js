@@ -23,7 +23,6 @@ exports.transaction = functions.https.onCall(async (data={localStoreData: {}, lo
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
     }
-    console.log("A");
 
     // attempt transaction (covers entire database, which means any change will cancel transaction, so expect retries/fails)
     let dbRef = admin.database().ref();
@@ -32,7 +31,7 @@ exports.transaction = functions.https.onCall(async (data={localStoreData: {}, lo
         // validate that local store data matches server data
         if (dbData == null) return dbData;
         if (JSON.stringify(data.localStoreData) != JSON.stringify(dbData.store ?? {})) return dbData;
-        console.log("B");
+        console.log("store matches");
 
         // validate that local cart data matches server data
         let user = dbData.users[context.auth.uid];
@@ -41,49 +40,53 @@ exports.transaction = functions.https.onCall(async (data={localStoreData: {}, lo
         let cart = user.cart;
         if (!cart) return dbData;
         if (JSON.stringify(data.localCartData) != JSON.stringify(cart)) return dbData;
-        console.log("C");
+        console.log("cart matches");
 
         // ensure items and amount are valid
         let totalCost = 0;
         let description="Order:";
         for (let id in cart) {
             let amount = cart[id];
-            if (!(id in store)) return dbData;
-            let item = store[id];
+            if (!(id in store.data)) return dbData;
+            let item = store.data[id];
             if (amount > item.amount) return dbData;
             totalCost += item.cost * amount;
             description += " [" + item.name + "]x" + amount;
         }
-        console.log("D");
+        console.log("items valid");
 
         // ensure user has enough money
         balanceRef = user.balance;
         if (!balanceRef || !balanceRef.amount) return dbData;
         if (balanceRef.amount < totalCost) return dbData;
-        console.log("E");
+
+        console.log("transaction validated, starting transaction");
 
         // transfer stock to user
+        if (!user.orders) user.orders = {};
+        let time = Date.now();
+        while (time in user.orders) {
+            time = Date.now();
+        }
+        let order = {};
         for (let id in cart) {
             let amount = cart[id];
-            store[id].amount -= amount;
-            
+            store.data[id].amount -= amount;
+            order[id] = amount;
         }
-        console.log("F");
+        user.orders[time] = order;
 
         // apply balance change
         balanceChangeHelper(balanceRef, totalCost, description, context);
-        console.log("G");
 
         // clear users cart
         user.cart = {};
-        console.log("H");
 
         // mark as successful
         isSuccess = true;
-        console.log("I");
+        console.log("transaction success");
         return dbData;
     }).catch((e) => {});
-    console.log("J");
     return {isSuccess: isSuccess};
 });
 
@@ -108,9 +111,6 @@ exports.newUser = functions.https.onCall(async (data, context) => {
                 name: context.auth.token.name || "",
                 email: context.auth.token.email || "",
                 role: "user",
-                inventory: {
-                    next_id: 0,
-                }
             });
         }
         
@@ -228,9 +228,6 @@ exports.EMULATOR_DB_SETUP = functions.https.onCall(async (data, context) => {
         rUz2T7OHKwcB3RptZoMsw4lYl9Y2: {
             name: "Alexander Yoshida",
             role: "accountant",
-            inventory: {
-                next_id: 0
-            },
             balance: {
                 amount: 900,
                 records: {
