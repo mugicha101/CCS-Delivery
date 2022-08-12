@@ -17,12 +17,74 @@ const getRole = async (context) => {
 }
 
 // performs a transaction
-exports.transaction = functions.https.onCall(async (data, context) => {
-    for (let item in data.items) {
-        admin.database().ref("store/" + item.id).transaction(function(currentItem) {
-            currentItem.amount -= item.amount;
-        })
+exports.transaction = functions.https.onCall(async (data={localStoreData: {}, localCartData: {}}, context) => {
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
     }
+    console.log("A");
+
+    // attempt transaction (covers entire database, which means any change will cancel transaction, so expect retries/fails)
+    let dbRef = admin.database().ref();
+    let isSuccess = false;
+    await dbRef.transaction(function(dbData) {
+        // validate that local store data matches server data
+        if (dbData == null) return dbData;
+        if (JSON.stringify(data.localStoreData) != JSON.stringify(dbData.store ?? {})) return dbData;
+        console.log("B");
+
+        // validate that local cart data matches server data
+        let user = dbData.users[context.auth.uid];
+        let store = dbData.store;
+        if (!user) return dbData;
+        let cart = user.cart;
+        if (!cart) return dbData;
+        if (JSON.stringify(data.localCartData) != JSON.stringify(cart)) return dbData;
+        console.log("C");
+
+        // ensure items and amount are valid
+        let totalCost = 0;
+        let description="Order:";
+        for (let id in cart) {
+            let amount = cart[id];
+            if (!(id in store)) return dbData;
+            let item = store[id];
+            if (amount > item.amount) return dbData;
+            totalCost += item.cost * amount;
+            description += " [" + item.name + "]x" + amount;
+        }
+        console.log("D");
+
+        // ensure user has enough money
+        balanceRef = user.balance;
+        if (!balanceRef || !balanceRef.amount) return dbData;
+        if (balanceRef.amount < totalCost) return dbData;
+        console.log("E");
+
+        // transfer stock to user
+        for (let id in cart) {
+            let amount = cart[id];
+            store[id].amount -= amount;
+            
+        }
+        console.log("F");
+
+        // apply balance change
+        balanceChangeHelper(balanceRef, totalCost, description, context);
+        console.log("G");
+
+        // clear users cart
+        user.cart = {};
+        console.log("H");
+
+        // mark as successful
+        isSuccess = true;
+        console.log("I");
+        return dbData;
+    }).catch((e) => {});
+    console.log("J");
+    return {isSuccess: isSuccess};
 });
 
 // initialized new user's data in firebase if necessary (returns user's data)
@@ -116,6 +178,26 @@ exports.getUidFromEmail = functions.https.onCall(async (email, context) => {
     return {value: null};
 });
 
+function balanceChangeHelper(balanceRef, amount, description, context) {
+    if (!balanceRef.records) balanceRef.records = {};
+
+    // get time
+    let time = Date.now();
+    while (time in balanceRef.records) {
+        time = Date.now();
+    }
+
+    // add new balance change
+    balanceRef.records[time] = {amount: parseInt(amount), description: description, accountant_uid: context.auth.uid};
+
+    // update balance
+    let balance = 0;
+    for (let change in balanceRef.records) {
+        balance += balanceRef.records[change].amount;
+    }
+    balanceRef.amount = balance;
+}
+
 exports.addBalanceChange = functions.https.onCall(async (data={uid: "", amount: 0, description: "", isPlaceholder: false}, context) => {
     if (!context.auth) {
         // Throwing an HttpsError so that the client gets the error details.
@@ -135,24 +217,7 @@ exports.addBalanceChange = functions.https.onCall(async (data={uid: "", amount: 
     await balRef.transaction(function(value) {
         if (value == null)
             value = {};
-        if (value.records == null)
-            value.records = {};
-        
-        // get time
-        let time = Date.now();
-        while (time in value.records) {
-            time = Date.now();
-        }
-
-        // add new balance change
-        value.records[time] = {amount: parseInt(data.amount), description: data.description, accountant_uid: context.auth.uid};
-
-        // update balance
-        let balance = 0;
-        for (let change in value.records) {
-            balance += value.records[change].amount;
-        }
-        value.amount = balance;
+        balanceChangeHelper(value, data.amount, data.description, context);
         return value;
     })
 });
@@ -185,40 +250,49 @@ exports.EMULATOR_DB_SETUP = functions.https.onCall(async (data, context) => {
         },
     });
     admin.database().ref("store").set({
-        chen_fumo: {
-            name: "Chen Fumo",
-            amount: 1,
-            cost: 300,
-            description: "based chen",
-            retrieval_method: "delivery",
-            unit: "fumo",
-            vendor: "ZUN"
+        next_id: 4,
+        active: {
+            0: true,
+            1: true,
+            2: true,
+            3: true,
         },
-        lenoir_food: {
-            name: "Goat Cheese Strawberry Vinaigrette Pizza",
-            amount: 13,
-            cost: 15,
-            description: "pizza made with goat cheese and a strawberry mix to give the full package of lenoir (may cause unalive)",
-            retrieval_method: "pick-up",
-            unit: "slice",
-            vendor: "Lenoir"
-        },
-        pekora_juice: {
-            name: "Pekora Juice",
-            amount: 0,
-            cost: 33.33,
-            description: "20oz plum juice in a wine bottle",
-            unit: "bottle",
-            vendor: "Usaken"
-        },
-        watermelon: {
-            name: "Watermelon",
-            amount: 5,
-            cost: 5,
-            description: "5lb watermelon",
-            retrieval_method: "pick-up",
-            unit: "melon",
-            vendor: "uber sheep"
+        data: {
+            0: {
+                name: "Chen Fumo",
+                amount: 1,
+                cost: 300,
+                description: "based chen",
+                retrieval_method: "delivery",
+                unit: "fumo",
+                vendor: "ZUN"
+            },
+            1: {
+                name: "Goat Cheese Strawberry Vinaigrette Pizza",
+                amount: 13,
+                cost: 15,
+                description: "pizza made with goat cheese and a strawberry mix to give the full package of lenoir (may cause unalive)",
+                retrieval_method: "pick-up",
+                unit: "slice",
+                vendor: "Lenoir"
+            },
+            2: {
+                name: "Pekora Juice",
+                amount: 0,
+                cost: 33.33,
+                description: "20oz plum juice in a wine bottle",
+                unit: "bottle",
+                vendor: "Usaken"
+            },
+            3: {
+                name: "Watermelon",
+                amount: 5,
+                cost: 5,
+                description: "5lb watermelon",
+                retrieval_method: "pick-up",
+                unit: "melon",
+                vendor: "uber sheep"
+            }
         }
     });
 })

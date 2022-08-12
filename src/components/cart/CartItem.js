@@ -8,9 +8,16 @@ function CartItem({id, itemData, amount, updateData}) {
 
     const addToCart = httpsCallable(useContext(UserContext).functions, 'addToCart');
 
+    let formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+    });
+  
+
     return (<div key="itemData.name">
         <h3>{itemData? itemData.name + " x" + amount : "Removed Item"}</h3>
         {itemData && amount > itemData.amount && <p>WARNING: Order exceeds available stock</p>}
+        {itemData && <h4>Cost: {formatter.format(itemData.cost * amount) + " (" + formatter.format(itemData.cost) + " per " + itemData.unit + ")"}</h4>}
         <form onSubmit={async (e) => {
             e.preventDefault();
             setWaiting(true);

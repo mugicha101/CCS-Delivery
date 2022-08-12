@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import {app} from '../../firebase.js';
 import { getDatabase, ref, get, set, child } from "firebase/database";
 import CartItem from "./CartItem.js";
+import { httpsCallable } from "firebase/functions";
 
 function Cart({isLoaded, user, userData, updateData}) {
     let navigate = useNavigate();
+
+    const transaction = httpsCallable(useContext(UserContext).functions, 'transaction');
     
     const [storeData, setStoreData] = useState({})
     
@@ -35,8 +38,22 @@ function Cart({isLoaded, user, userData, updateData}) {
             cartList.push(p);
         });
         cartList.sort();
-        console.log(cartList);
     }
+
+    let totalCost = 0;
+    let valid = true;
+    console.log(cartList);
+    for (let i = 0; i < cartList.length; i++) {
+        let p = cartList[i];
+        totalCost += p.id in storeData? storeData[p.id].cost * p.amount : 0;
+        if (!(p.id in storeData) || storeData[p.id].amount < p.amount)
+            valid = false;
+    }
+
+    let formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+    });
 
     return (<div>
         <h2>cart</h2>
@@ -47,7 +64,8 @@ function Cart({isLoaded, user, userData, updateData}) {
                 return <CartItem id={p.id} itemData={storeItem} amount={p.amount} key={p.name} updateData={updateData}/>
             })
         }
-        <button>Check Out</button>
+        <h3>Total Cost: {formatter.format(totalCost)}</h3>
+        <button onClick={(e) => {transaction({localStoreData: storeData, localCartData: userData.cart})} } disabled={!valid}>Finish Order</button>
         </div>
     </div>)
 }
