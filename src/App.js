@@ -52,14 +52,10 @@ function App() {
         }
         await get(ref(db, 'users/' + user.uid)).then((snapshot) => {
             if (snapshot.exists()) {
-                console.log(snapshot.val());
                 setData(snapshot.val());
             } else {
                 // CREATE NEW USER
-                newUser()
-                .then((result) => {
-                    console.log("NEW USER RESULT:", result);
-                });
+                newUser();
             }
         });
     }

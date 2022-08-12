@@ -43,7 +43,6 @@ function Cart({isLoaded, user, userData, updateData}) {
 
     let totalCost = 0;
     let valid = true;
-    console.log(cartList);
     for (let i = 0; i < cartList.length; i++) {
         let p = cartList[i];
         totalCost += storeData && storeData.data && p.id in storeData.data? storeData.data[p.id].cost * p.amount : 0;

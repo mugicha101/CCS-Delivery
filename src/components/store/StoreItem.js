@@ -40,7 +40,6 @@ function StoreItem({updateData, id="", name="", description="", cost=0, amount=0
             sx={{backgroundColor: "var(--quinary)"}}
             onClick={(e) => {
               addToCart({id: id, amount: 1, relative: true}).then(async (e) => {
-                console.log("update data");
                 updateData();
               });
             }}

@@ -36,7 +36,6 @@ function UserBalanceEditor() {
                 balance = {amount: 0};
             }
         });
-        console.log(balance);
 
         // configure balance list
         let rList = [];
@@ -53,11 +52,9 @@ function UserBalanceEditor() {
     }
 
     const handleSubmit = async (em) => {
-        console.log(em);
         setEmail(em);
         setWaiting(true);
         await getUidFromEmail(em).then(async (res) => {
-            console.log(res.data);
             if (res.data.error != null)
                 return;
             let p = res.data.value == null;
