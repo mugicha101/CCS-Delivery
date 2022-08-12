@@ -5,8 +5,9 @@ import {app} from '../../firebase.js';
 import { getDatabase, ref, get, set, child } from "firebase/database";
 import CartItem from "./CartItem.js";
 import { httpsCallable } from "firebase/functions";
+import { Drawer } from "@mui/material";
 
-function Cart({isLoaded, user, userData, updateData}) {
+function Cart({ open, setOpen }) {
     let navigate = useNavigate();
 
     const transaction = httpsCallable(useContext(UserContext).functions, 'transaction');
@@ -14,7 +15,7 @@ function Cart({isLoaded, user, userData, updateData}) {
     const [storeData, setStoreData] = useState({})
     const [waiting, setWaiting] = useState(false);
     
-    const db = useContext(UserContext).db;
+    const { isLoaded, user, data, updateData, db } = useContext(UserContext);
 
     const loadStore = async () => {
         let storeRef = ref(db, "store");
@@ -33,9 +34,9 @@ function Cart({isLoaded, user, userData, updateData}) {
     }, [isLoaded, user])
 
     let cartList = [];
-    if (userData != null && userData.cart != null) {
-        Object.keys(userData.cart).map((key, index) => {
-            let p = {id: key, amount: userData.cart[key]};
+    if (data != null && data.cart != null) {
+        Object.keys(data.cart).map((key, index) => {
+            let p = {id: key, amount: data.cart[key]};
             cartList.push(p);
         });
         cartList.sort();
@@ -55,23 +56,33 @@ function Cart({isLoaded, user, userData, updateData}) {
         currency: 'USD'
     });
 
+    let onClick = async () => {
+        setWaiting(true);
+        await transaction({localStoreData: storeData, localCartData: data.cart});
+        await updateData();
+        setWaiting(false);
+    }
+
     return (<div>
-        <h2>cart</h2>
-        <div className="cartList">
-        {
-            cartList.map((p) => {
-                let storeItem = storeData.data && p.id in storeData.data? storeData.data[p.id] : null;
-                return <CartItem id={p.id} itemData={storeItem} amount={p.amount} key={p.name} updateData={updateData}/>
-            })
-        }
-        <h3>Total Cost: {formatter.format(totalCost)}</h3>
-        <button onClick={async (e) => {
-            setWaiting(true);
-            await transaction({localStoreData: storeData, localCartData: userData.cart});
-            await updateData();
-            setWaiting(false);
-        } } disabled={!valid || waiting}>Finish Order</button>
-        </div>
+        <Drawer
+            anchor="right"
+            variant="persistent"
+            open={open}
+            onClose={(e) => setOpen(false)}
+        >
+            <button onClick={() => setOpen(false)}>Close</button>
+            <div className="cartList">
+                {
+                    cartList.map((p) => {
+                        let storeItem = storeData.data && p.id in storeData.data? storeData.data[p.id] : null;
+                        return <CartItem id={p.id} itemData={storeItem} amount={p.amount} key={p.name} updateData={updateData}/>
+                    })
+                }
+                <h3>Total Cost: {formatter.format(totalCost)}</h3>
+                <button onClick={onClick} disabled={!valid || waiting}>Finish Order</button>
+            </div>
+        </Drawer>
+        
     </div>)
 }
 

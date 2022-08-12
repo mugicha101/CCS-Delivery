@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import { LoginButton } from "./LoginButton";
+import Cart from "../cart/Cart";
 import './NavBar.css';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { ArrowDropDown, ShoppingCart } from '@mui/icons-material';
 
 function NavButton({className, to, name}) {
     if (!className) {
@@ -15,6 +17,7 @@ function NavButton({className, to, name}) {
 
 
 function NavContent() {
+    const [open, setOpen] = useState(false);
     return (
         <UserContext.Consumer>
             {({isLoaded, user}) => (
@@ -27,7 +30,7 @@ function NavContent() {
 
                     <div class="dropdown">
                         <a class="navButton roleButton">
-                            <span class="navSpan">ADMIN</span><ArrowDropDownIcon sx={{fontSize: 25, verticalAlign: "middle"}}/>
+                            <span class="navSpan">ADMIN</span><ArrowDropDown sx={{fontSize: 25, verticalAlign: "middle"}}/>
                         </a>
                         <div class="dropdown-content">
                             <NavButton className="roleButton" to="../balance_editor" name="BALANCE EDITOR"/>
@@ -36,6 +39,12 @@ function NavContent() {
                     </div>
                     
                     <LoginButton isLoaded={isLoaded} user={user}/>
+
+                    <button class="navButton roleButton" onClick={(e) => setOpen(true)}>
+                        <ShoppingCart sx={{fontSize: 25, verticalAlign: "middle"}}/>
+                    </button>
+
+                    <Cart open={open} setOpen={setOpen}/>
                 </>
             )}
         </UserContext.Consumer>

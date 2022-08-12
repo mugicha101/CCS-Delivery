@@ -13,6 +13,7 @@
     text-decoration: none;
     transition: all 0.2s linear;
     padding: 14px 16px;
+    border: none;
 }
 
 .selected {
@@ -28,7 +29,7 @@
     font-size: 15px;
     text-align: center;
     display: inline;
-    vertical-align:middle;
+    vertical-align: middle;
 }
 
 .navButton:hover {
