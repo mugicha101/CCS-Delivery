@@ -1,8 +1,8 @@
-p, h2, h4 {
+p, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
-.StoreItem {
+.storeItem {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
@@ -12,29 +12,42 @@ p, h2, h4 {
     flex-direction: column;
 }
 
-.StoreItem:hover {
+.storeItem:hover {
     transform: translateY(-5px);
 }
 
-.StoreItemContent {
+.storeItemContent {
     display: flex;
     flex-direction: column;
     height: fit-content;
     flex-grow: 1;
 }
 
-.StoreItemContent div {
+.storeItemContent > div {
     padding: 12px;
+}
+
+.itemInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.itemSubheading {
+    display: flex;
+
 }
 
 .stockExists {
     color: green;
     font-weight: bold;
+    display: inline;
 }
 
 .stockNone {
     color: red;
     font-weight: bold;
+    display: inline;
 }
 
 .productGrid {

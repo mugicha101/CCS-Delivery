@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import { Grid } from "@mui/material";
+import { Divider, Grid, Button } from "@mui/material";
 
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
 import { UserContext } from '../../contexts/UserContext';
@@ -11,25 +11,42 @@ function StoreItem({updateData, id="", name="", description="", cost=0, amount=0
 
   return (
 <Grid item xs={12} sm={6} md={4}>
-    <div class="StoreItem">
+    <div class="storeItem">
       <img src={placeholderImage}/>
-      <div class="StoreItemContent">
-        <div>
+      <div class="storeItemContent">
+        <div class="itemInfo">
           <h2>{name}</h2>
-          <h4>{vendor}</h4>
-          <p>description: {description}</p>
+          <div class="itemSubheading">
+            <p><b><em>{vendor.toUpperCase()}</em></b></p>
+            <div style={{flexGrow: 1}}/>
+            <div>
+              <p style={{display: "inline"}}><b>${cost}</b></p>
+              <p class={`${amount === 0? "stockNone" : "stockExists"}`}>
+                {amount === 0? " (Out of Stock)" : ` (${amount} left)`}
+              </p>
+            </div>
+
+          </div>
+          <Divider/>
+          <p>{description}</p>
         </div>
         <div style={{flexGrow: 1, padding: 0}}/>
         <div>
-          <p>Cost per {unit}: ${cost}</p>
           {/* <p>Retrieval Method: {retrieval_method}</p> */}
-          <p class={`${amount === 0? "stockNone" : "stockExists"}`}>{amount === 0? "Out of Stock" : `In Stock (${amount} left)`}</p>
-          <button disabled={amount===0} onClick={(e) => {
-            addToCart({id: id, amount: 1, relative: true}).then(async (e) => {
-              console.log("update data");
-              updateData();
-            });
-          }}>Add to Cart</button>
+          <Button 
+            variant="contained"
+            fullWidth
+            disabled={amount===0} 
+            sx={{backgroundColor: "var(--quinary)"}}
+            onClick={(e) => {
+              addToCart({id: id, amount: 1, relative: true}).then(async (e) => {
+                console.log("update data");
+                updateData();
+              });
+            }}
+          >
+            Add to Cart
+          </Button>
         </div>
       </div>
     </div>

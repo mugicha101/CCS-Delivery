@@ -5,6 +5,8 @@
     --quaternary: #454372;
     --quinary: #2F2963;
     --bg-color: #BBF2FF;
+
+    
 }
 
 .App {
@@ -48,8 +50,9 @@
 
 body {
     background-color: var(--bg-color);
+    font-family: "Roboto","Helvetica","Arial", sans-serif;
 }
 
 .wrapper {
-    padding: 0 10% 40px 10%;
+    padding: 40px 10% 40px 10%;
 }
