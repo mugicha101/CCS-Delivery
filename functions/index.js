@@ -77,7 +77,7 @@ exports.transaction = functions.https.onCall(async (data={localStoreData: {}, lo
         user.orders[time] = order;
 
         // apply balance change
-        balanceChangeHelper(balanceRef, totalCost, description, context);
+        balanceChangeHelper(balanceRef, -totalCost, description, context);
 
         // clear users cart
         user.cart = {};
