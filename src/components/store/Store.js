@@ -20,8 +20,12 @@ function Store({isLoaded, user, db, updateData}) {
         if (isLoaded && Object.keys(products).length === 0) {
             get(ref(db, 'store')).then((snapshot) => {
                 if (snapshot.exists()) {
-                    console.log(snapshot.val());
-                    setProducts(snapshot.val());
+                    let store = snapshot.val();
+                    let prods = {};
+                    for (let id in store.active) {
+                        prods[id] = store.data[id];
+                    }
+                    setProducts(prods);
                 } else {
                     return null;
                 }

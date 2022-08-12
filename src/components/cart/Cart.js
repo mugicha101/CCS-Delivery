@@ -45,8 +45,8 @@ function Cart({isLoaded, user, userData, updateData}) {
     console.log(cartList);
     for (let i = 0; i < cartList.length; i++) {
         let p = cartList[i];
-        totalCost += p.id in storeData? storeData[p.id].cost * p.amount : 0;
-        if (!(p.id in storeData) || storeData[p.id].amount < p.amount)
+        totalCost += storeData && storeData.data && p.id in storeData.data? storeData.data[p.id].cost * p.amount : 0;
+        if (!storeData || !storeData.data || !(p.id in storeData.data) || !(p.id in storeData.active)|| storeData.data[p.id].amount < p.amount)
             valid = false;
     }
 
@@ -60,7 +60,7 @@ function Cart({isLoaded, user, userData, updateData}) {
         <div className="cartList">
         {
             cartList.map((p) => {
-                let storeItem = storeData[p.id];
+                let storeItem = storeData.data && p.id in storeData.data? storeData.data[p.id] : null;
                 return <CartItem id={p.id} itemData={storeItem} amount={p.amount} key={p.name} updateData={updateData}/>
             })
         }
