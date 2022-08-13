@@ -5,7 +5,8 @@ import {app} from '../../firebase.js';
 import { getDatabase, ref, get, set, child } from "firebase/database";
 import CartItem from "./CartItem.js";
 import { httpsCallable } from "firebase/functions";
-import { Drawer } from "@mui/material";
+import { Button, Drawer } from "@mui/material";
+import "./Cart.css";
 
 function Cart({ open, setOpen }) {
     let navigate = useNavigate();
@@ -66,20 +67,60 @@ function Cart({ open, setOpen }) {
     return (<div>
         <Drawer
             anchor="right"
-            variant="persistent"
+            // variant="persistent"
             open={open}
             onClose={(e) => setOpen(false)}
+            PaperProps={{
+                sx: {
+                    width: "40%"
+                }
+            }}
         >
-            <button onClick={() => setOpen(false)}>Close</button>
-            <div className="cartList">
+            <div class="cartHeader">
+                <div class="headerText">
+                    <h2>Cart</h2>
+                </div>
+                <Button 
+                    onClick={() => setOpen(false)}
+                    variant="contained"
+                    sx={{
+                        borderRadius: 0, 
+                        height: "100%", 
+                        width: "30%",
+                        backgroundColor: "var(--quinary)",
+                        ":hover": {
+                            backgroundColor: "var(--quaternary)"
+                        }
+                    }}
+                >
+                    Close
+                </Button>
+            </div>
+            <div class="cartWrapper">
                 {
                     cartList.map((p) => {
                         let storeItem = storeData.data && p.id in storeData.data? storeData.data[p.id] : null;
                         return <CartItem id={p.id} itemData={storeItem} amount={p.amount} key={p.name} updateData={updateData}/>
                     })
                 }
-                <h3>Total Cost: {formatter.format(totalCost)}</h3>
-                <button onClick={onClick} disabled={!valid || waiting}>Finish Order</button>
+            </div>
+            <div class="cartFooter">
+                <Button 
+                    onClick={onClick} 
+                    disabled={!valid || waiting}
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                        borderRadius: 0, 
+                        height: "100%", 
+                        backgroundColor: "var(--quinary)",
+                        ":hover": {
+                            backgroundColor: "var(--quaternary)"
+                        }
+                    }}
+                >
+                    Finish Order ({formatter.format(totalCost)})
+                </Button>
             </div>
         </Drawer>
         

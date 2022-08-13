@@ -37,7 +37,12 @@ function StoreItem({updateData, id="", name="", description="", cost=0, amount=0
             variant="contained"
             fullWidth
             disabled={amount===0} 
-            sx={{backgroundColor: "var(--quinary)"}}
+            sx={{
+              backgroundColor: "var(--quinary)",
+              ":hover": {
+                backgroundColor: "var(--quaternary)"
+              }
+            }}
             onClick={(e) => {
               addToCart({id: id, amount: 1, relative: true}).then(async (e) => {
                 updateData();
