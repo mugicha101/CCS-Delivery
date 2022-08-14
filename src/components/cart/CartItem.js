@@ -1,12 +1,12 @@
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
-import { Button, TextField } from "@mui/material";
+import { Button, Grid, TextField } from "@mui/material";
 import { httpsCallable } from "firebase/functions";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 
-function CartItem({id, itemData, amount, updateData}) {
+function CartItem({id, itemData, amount, updateData, waiting, setWaiting}) {
     const [formAmount, setFormAmount] = useState(amount);
-    const [waiting, setWaiting] = useState(false);
+    console.log(amount, formAmount)
 
     const addToCart = httpsCallable(useContext(UserContext).functions, 'addToCart');
 
@@ -14,62 +14,109 @@ function CartItem({id, itemData, amount, updateData}) {
         style: 'currency',
         currency: 'USD'
     });
-  
-    return (<div key="itemData.name" class="cartItem">
-        <div class="cartItemInfo">
-            <h4>{itemData? itemData.name: "Removed Item"}</h4>
-            {itemData && <h5><em>{itemData.vendor.toUpperCase()}</em></h5>}
-        </div>
 
-        <div class="itemCounter">
-            <Button 
-                variant="outlined"
-                sx={{width: "25%", padding: 1, minWidth: 0, borderRadius: "4px 0 0 4px", borderRight: "none"}}
-            >
-                <ArrowLeft/>
-            </Button>
-            <TextField 
-                sx={{
-                    width: "50%", 
-                    "fieldset": {
-                        borderRadius: "0 0 0 0"
-                    },
-                    "div": {
-                        height: "100%"
-                    }
-                }}
-                inputProps={{
-                    sx: {
-                        padding: 0,
-                        height: "100%",
-                        textAlign: "center"
-                    }
-                }}
-            >
-                sasdsa
-            </TextField>
-            <Button 
-                variant="outlined"
-                sx={{width: "25%", padding: 1, minWidth: 0, borderRadius: "0 4px 4px 0", borderLeft: "none"}}
-            >
-                <ArrowRight/>
-            </Button>
-        </div>
+    let getNum = (val) => {
+        if (val === "") {
+            return 1;
+        }
+
+        let num = parseInt(val);
+        if (!Number.isInteger(num)) {
+            return -1;
+        }
+
+        if (num < 1) {
+            num = 1;
+        }
+        if (num > 99) {
+            num = 99;
+        }
+
+        return num;
+    }
+
+    let handleAmount = async (val) => {
+        setWaiting((prev) => prev+1);
         
-        {itemData && amount > itemData.amount && <p>WARNING: Order exceeds available stock</p>}
-        {/* {itemData && <h4>Cost: {formatter.format(itemData.cost * amount) + " (" + formatter.format(itemData.cost) + " per " + itemData.unit + ")"}</h4>} */}
-        {/* <form onSubmit={async (e) => {
-            e.preventDefault();
-            setWaiting(true);
-            await addToCart({id: id, amount: formAmount == ""? 0 : formAmount, relative: false});
+        let newAmount = getNum(val);
+        setFormAmount(newAmount);
+        if (getNum !== -1) {
+            await addToCart({id: id, amount: newAmount, relative: false});
             await updateData();
-            setWaiting(false);
-        }}>
-            <label htmlFor="amount">Amount: </label>
-            <input id="amount" type="number" value={formAmount ?? ""} onChange={(e) => {setFormAmount(e.target.value == "" ? "" : (parseInt(e.target.value) < 0? 0 : parseInt(e.target.value)))}}></input>
-            {formAmount != amount && <input type="submit" disabled={waiting} value="Set"></input>}
-        </form> */}
-    </div>);
+        }
+
+        setWaiting((prev) => prev-1);
+    }
+  
+    return (
+        <Grid container key="itemData.name" columns={12} spacing={2}>
+            <Grid item xs={6}>
+                <div class="cartItemInfo">
+                    <h4 title={itemData? itemData.name: "Removed Item"}>{itemData? itemData.name: "Removed Item"}</h4>
+                    {itemData && <h5 title={itemData.vendor}><em>{itemData.vendor.toUpperCase()}</em></h5>}
+                </div>
+            </Grid>
+
+            <Grid item xs={3}>
+                <div class="itemCounter">
+                    <Button 
+                        variant="contained"
+                        sx={{width: "25%", padding: 1, minWidth: 0, borderRadius: "4px 0 0 4px", borderRight: "none"}}
+                        onClick={() => handleAmount(formAmount-1)}
+                    >
+                        <ArrowLeft/>
+                    </Button>
+                    <TextField 
+                        sx={{
+                            width: "50%", 
+                            "fieldset": {
+                                borderStyle: "solid none",
+                                borderRadius: "0 0 0 0",
+                                borderColor: "var(--primary)",
+                                top: 0
+                            },
+                            "legend": {
+                                display: "none"
+                            },
+                            "div": {
+                                height: "100%"
+                            }
+                        }}
+                        inputProps={{
+                            sx: {
+                                padding: 0,
+                                height: "100%",
+                                textAlign: "center"
+                            }
+                        }}
+                        value={formAmount}
+                        onChange={(e) => handleAmount(e.target.value)}
+                    />
+                    <Button 
+                        variant="contained"
+                        sx={{width: "25%", padding: 1, minWidth: 0, borderRadius: "0 4px 4px 0", borderLeft: "none"}}
+                        onClick={() => handleAmount(formAmount+1)}
+                    >
+                        <ArrowRight/>
+                    </Button>
+                </div>
+            </Grid>
+
+            <Grid item xs={3} >
+                <div class="itemPrice">
+                    {itemData && 
+                        <h4>
+                            {formatter.format(itemData.cost * formAmount)}
+                            <br />
+                            {"(" + formatter.format(itemData.cost) + " ea.)"}
+                        </h4>
+                    }
+                </div>
+            </Grid>
+            
+            {/* {itemData && amount > itemData.amount && <p>WARNING: Order exceeds available stock</p>} */}
+        </Grid>
+    );
 }
 
 export default CartItem;

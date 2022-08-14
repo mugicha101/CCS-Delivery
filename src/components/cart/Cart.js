@@ -14,7 +14,7 @@ function Cart({ open, setOpen }) {
     const transaction = httpsCallable(useContext(UserContext).functions, 'transaction');
     
     const [storeData, setStoreData] = useState({})
-    const [waiting, setWaiting] = useState(false);
+    const [ waiting, setWaiting ] = useState(0); //0 when nothing is waiting, counts how many calls are currently active
     
     const { isLoaded, user, data, updateData, db } = useContext(UserContext);
 
@@ -58,10 +58,10 @@ function Cart({ open, setOpen }) {
     });
 
     let onClick = async () => {
-        setWaiting(true);
+        setWaiting((prev) => prev+1);
         await transaction({localStoreData: storeData, localCartData: data.cart});
         await updateData();
-        setWaiting(false);
+        setWaiting((prev) => prev-1);
     }
 
     return (<div>
@@ -96,14 +96,22 @@ function Cart({ open, setOpen }) {
                 {
                     cartList.map((p) => {
                         let storeItem = storeData.data && p.id in storeData.data? storeData.data[p.id] : null;
-                        return <CartItem id={p.id} itemData={storeItem} amount={p.amount} key={p.name} updateData={updateData}/>
+                        return <CartItem 
+                            id={p.id} 
+                            itemData={storeItem} 
+                            amount={p.amount} 
+                            key={p.name} 
+                            updateData={updateData}
+                            waiting={waiting}
+                            setWaiting={setWaiting}
+                        />
                     })
                 }
             </div>
             <div class="cartFooter">
                 <Button 
                     onClick={onClick} 
-                    disabled={!valid || waiting}
+                    disabled={!valid || waiting !== 0}
                     variant="contained"
                     fullWidth
                     sx={{

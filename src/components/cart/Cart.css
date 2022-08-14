@@ -4,7 +4,7 @@
     height: 100%;
     overflow: auto;
     padding: 20px 5%;
-    gap: 10px;
+    gap: 16px;
 }
 
 .cartHeader {
@@ -21,26 +21,19 @@
     width: 70%;
 }
 
-.cartItem {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
-.cartItemInfo {
-    width: 60%;
+.cartItemInfo h4,h5 {
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 .itemCounter {
     display: flex;
     flex-direction: row;
-    width: 20%;
 }
 
-.cartItemInfo h4,h5 {
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+.itemPrice {
+    text-align: center;
 }
 
 .cartFooter {
