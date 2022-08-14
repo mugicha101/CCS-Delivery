@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { Button, TextField } from "@mui/material";
 import { httpsCallable } from "firebase/functions";
 import { useContext, useEffect, useState } from "react";
@@ -23,16 +24,35 @@ function CartItem({id, itemData, amount, updateData}) {
         <div class="itemCounter">
             <Button 
                 variant="outlined"
-                sx={{width: "25%", padding: 1, minWidth: 0}}
+                sx={{width: "25%", padding: 1, minWidth: 0, borderRadius: "4px 0 0 4px", borderRight: "none"}}
             >
-                T
+                <ArrowLeft/>
             </Button>
-            <TextField sx={{width: "50%"}}>sasdsa</TextField>
+            <TextField 
+                sx={{
+                    width: "50%", 
+                    "fieldset": {
+                        borderRadius: "0 0 0 0"
+                    },
+                    "div": {
+                        height: "100%"
+                    }
+                }}
+                inputProps={{
+                    sx: {
+                        padding: 0,
+                        height: "100%",
+                        textAlign: "center"
+                    }
+                }}
+            >
+                sasdsa
+            </TextField>
             <Button 
                 variant="outlined"
-                sx={{width: "25%", padding: 1, minWidth: 0}}
+                sx={{width: "25%", padding: 1, minWidth: 0, borderRadius: "0 4px 4px 0", borderLeft: "none"}}
             >
-                T
+                <ArrowRight/>
             </Button>
         </div>
         

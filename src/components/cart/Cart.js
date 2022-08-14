@@ -86,11 +86,7 @@ function Cart({ open, setOpen }) {
                     sx={{
                         borderRadius: 0, 
                         height: "100%", 
-                        width: "30%",
-                        backgroundColor: "var(--quinary)",
-                        ":hover": {
-                            backgroundColor: "var(--quaternary)"
-                        }
+                        width: "30%"
                     }}
                 >
                     Close
@@ -112,11 +108,7 @@ function Cart({ open, setOpen }) {
                     fullWidth
                     sx={{
                         borderRadius: 0, 
-                        height: "100%", 
-                        backgroundColor: "var(--quinary)",
-                        ":hover": {
-                            backgroundColor: "var(--quaternary)"
-                        }
+                        height: "100%"
                     }}
                 >
                     Finish Order ({formatter.format(totalCost)})

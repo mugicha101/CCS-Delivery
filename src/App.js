@@ -15,6 +15,8 @@ import { initializeApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
 import UserBalanceEditor from './components/roles/UserBalanceEditor';
 import UserRoleEditor from './components/roles/UserRoleEditor';
+import { createTheme } from '@mui/material';
+import { ThemeProvider } from '@emotion/react';
 
 const db = getDatabase();
 if (window.location.hostname === "localhost" && window.location.port === "5000") {
@@ -38,6 +40,18 @@ if (window.location.hostname === "localhost" && window.location.port === "5000")
         }
     });
 }
+
+const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#2F2963',
+        dark: '#454372'
+      },
+      secondary: {
+        main: '##5d6329',
+      },
+    },
+  });
 
 function App() {
     const auth = getAuth();
@@ -77,18 +91,21 @@ function App() {
 
     return (
         <main>
-            <UserContext.Provider value={{isLoaded: isLoaded, user: user, data: data, db: db, updateData: updateData, functions: functions}}>
-                <NavBar />
-                <div class="wrapper">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db} updateData={updateData ?? function() {}}/>} />
-                        <Route path="/cart" element={<Cart isLoaded={isLoaded} user={user} userData={data} updateData={updateData ?? function() {}}/>} />
-                        <Route path="/balance_editor" element={<UserBalanceEditor user={user} userData={data}/>} />
-                        <Route path="/role_editor" element={<UserRoleEditor user={user} userData={data}></UserRoleEditor>} />
-                    </Routes>
-                </div>
-            </UserContext.Provider>
+            <ThemeProvider theme={theme}>
+                <UserContext.Provider value={{isLoaded: isLoaded, user: user, data: data, db: db, updateData: updateData, functions: functions}}>
+                    <NavBar />
+                    <div class="wrapper">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db} updateData={updateData ?? function() {}}/>} />
+                            <Route path="/cart" element={<Cart isLoaded={isLoaded} user={user} userData={data} updateData={updateData ?? function() {}}/>} />
+                            <Route path="/balance_editor" element={<UserBalanceEditor user={user} userData={data}/>} />
+                            <Route path="/role_editor" element={<UserRoleEditor user={user} userData={data}></UserRoleEditor>} />
+                        </Routes>
+                    </div>
+                </UserContext.Provider>
+            </ThemeProvider>
+            
         </main>
     );
 }

@@ -1,5 +1,5 @@
 .NavBar {
-    background-color: var(--quinary);
+    background-color: var(--primary);
     padding: 0% 10% 0% 10%;
     display: flex;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
@@ -8,7 +8,7 @@
 .navButton {
     display: block;
     color: white;
-    background-color: var(--quinary);
+    background-color: var(--primary);
     text-align: center;
     text-decoration: none;
     transition: all 0.2s linear;
@@ -17,12 +17,8 @@
 }
 
 .selected {
-    background-color: var(--quaternary);
+    background-color: var(--primary-alt);
 }
-
-/* .roleButton {
-    background-color: var(--quaternary);
-} */
 
 .navSpan {
     font-weight: bold;
