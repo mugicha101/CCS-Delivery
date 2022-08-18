@@ -21,7 +21,13 @@
     width: 70%;
 }
 
-.cartItemInfo h4,h5 {
+.cartItemInfo h4 {
+    -webkit-line-clamp: 2;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.cartItemInfo h5 {
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;

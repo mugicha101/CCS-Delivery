@@ -46,7 +46,18 @@ function Store({isLoaded, user, db, updateData}) {
     return (<div>
         <Grid container spacing={3}>
         {productList.map((p) => {
-            return <StoreItem updateData={updateData} id={p.id} name={p.name} description={p.description} cost={p.cost} amount={p.amount} retrieval_method={p.retrieval_method} unit={p.unit} vendor={p.vendor}/>
+            return <StoreItem 
+                key={p.id}
+                updateData={updateData} 
+                id={p.id} 
+                name={p.name} 
+                description={p.description} 
+                cost={p.cost} 
+                amount={p.amount} 
+                retrieval_method={p.retrieval_method} 
+                unit={p.unit} 
+                vendor={p.vendor}
+            />
         })}
         </Grid>
     </div>)

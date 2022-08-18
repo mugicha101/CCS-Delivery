@@ -96,11 +96,12 @@ function Cart({ open, setOpen }) {
                 {
                     cartList.map((p) => {
                         let storeItem = storeData.data && p.id in storeData.data? storeData.data[p.id] : null;
-                        return <CartItem 
-                            id={p.id} 
+                        return <CartItem
+                            key={p.id} 
+                            id={p.id}
                             itemData={storeItem} 
                             amount={p.amount} 
-                            key={p.name} 
+                            // key={p.name} 
                             updateData={updateData}
                             waiting={waiting}
                             setWaiting={setWaiting}

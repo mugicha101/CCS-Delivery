@@ -1,12 +1,11 @@
-import { ArrowLeft, ArrowRight } from "@mui/icons-material";
-import { Button, Grid, TextField } from "@mui/material";
+import { ArrowLeft, ArrowRight, Close } from "@mui/icons-material";
+import { Button, Grid, IconButton, TextField } from "@mui/material";
 import { httpsCallable } from "firebase/functions";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 
 function CartItem({id, itemData, amount, updateData, waiting, setWaiting}) {
     const [formAmount, setFormAmount] = useState(amount);
-    console.log(amount, formAmount)
 
     const addToCart = httpsCallable(useContext(UserContext).functions, 'addToCart');
 
@@ -47,10 +46,22 @@ function CartItem({id, itemData, amount, updateData, waiting, setWaiting}) {
 
         setWaiting((prev) => prev-1);
     }
+
+    let clearAmount = async () => {
+        setWaiting((prev) => prev+1);
+        
+        //setFormAmount(0);
+        if (getNum !== -1) {
+            await addToCart({id: id, amount: 0, relative: false});
+            await updateData();
+        }
+
+        setWaiting((prev) => prev-1);
+    }
   
     return (
-        <Grid container key="itemData.name" columns={12} spacing={2}>
-            <Grid item xs={6}>
+        <Grid container key="itemData.name" columns={12} spacing={2} alignItems="center">
+            <Grid item xs={5}>
                 <div class="cartItemInfo">
                     <h4 title={itemData? itemData.name: "Removed Item"}>{itemData? itemData.name: "Removed Item"}</h4>
                     {itemData && <h5 title={itemData.vendor}><em>{itemData.vendor.toUpperCase()}</em></h5>}
@@ -102,7 +113,7 @@ function CartItem({id, itemData, amount, updateData, waiting, setWaiting}) {
                 </div>
             </Grid>
 
-            <Grid item xs={3} >
+            <Grid item xs={3}>
                 <div class="itemPrice">
                     {itemData && 
                         <h4>
@@ -112,6 +123,12 @@ function CartItem({id, itemData, amount, updateData, waiting, setWaiting}) {
                         </h4>
                     }
                 </div>
+            </Grid>
+
+            <Grid item xs={1}>
+                <IconButton onClick={() => clearAmount()}>
+                    <Close/>
+                </IconButton>
             </Grid>
             
             {/* {itemData && amount > itemData.amount && <p>WARNING: Order exceeds available stock</p>} */}
