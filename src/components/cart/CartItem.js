@@ -60,79 +60,81 @@ function CartItem({id, itemData, amount, updateData, waiting, setWaiting}) {
     }
   
     return (
-        <Grid container key="itemData.name" columns={12} spacing={2} alignItems="center">
-            <Grid item xs={5}>
-                <div class="cartItemInfo">
-                    <h4 title={itemData? itemData.name: "Removed Item"}>{itemData? itemData.name: "Removed Item"}</h4>
-                    {itemData && <h5 title={itemData.vendor}><em>{itemData.vendor.toUpperCase()}</em></h5>}
-                </div>
-            </Grid>
+        <div class="cartItemWrapper">
+            <Grid container key="itemData.name" columns={12} spacing={1} alignItems="center">
+                <Grid item xs={6}>
+                    <div class="cartItemInfo">
+                        <h4 title={itemData? itemData.name: "Removed Item"}>{itemData? itemData.name: "Removed Item"}</h4>
+                        {itemData && <p title={itemData.vendor}><em>{itemData.vendor.toUpperCase()}</em></p>}
+                    </div>
+                </Grid>
 
-            <Grid item xs={3}>
-                <div class="itemCounter">
-                    <Button 
-                        variant="contained"
-                        sx={{width: "25%", padding: 1, minWidth: 0, borderRadius: "4px 0 0 4px", borderRight: "none"}}
-                        onClick={() => handleAmount(formAmount-1)}
-                    >
-                        <ArrowLeft/>
-                    </Button>
-                    <TextField 
-                        sx={{
-                            width: "50%", 
-                            "fieldset": {
-                                borderStyle: "solid none",
-                                borderRadius: "0 0 0 0",
-                                borderColor: "var(--primary)",
-                                top: 0
-                            },
-                            "legend": {
-                                display: "none"
-                            },
-                            "div": {
-                                height: "100%"
-                            }
-                        }}
-                        inputProps={{
-                            sx: {
-                                padding: 0,
-                                height: "100%",
-                                textAlign: "center"
-                            }
-                        }}
-                        value={formAmount}
-                        onChange={(e) => handleAmount(e.target.value)}
-                    />
-                    <Button 
-                        variant="contained"
-                        sx={{width: "25%", padding: 1, minWidth: 0, borderRadius: "0 4px 4px 0", borderLeft: "none"}}
-                        onClick={() => handleAmount(formAmount+1)}
-                    >
-                        <ArrowRight/>
-                    </Button>
-                </div>
-            </Grid>
+                <Grid item xs={3}>
+                    <div class="itemCounter">
+                        <Button 
+                            variant="contained"
+                            sx={{width: "25%", padding: 1, minWidth: 0, borderRadius: "4px 0 0 4px", borderRight: "none"}}
+                            onClick={() => handleAmount(formAmount-1)}
+                        >
+                            <ArrowLeft/>
+                        </Button>
+                        <TextField 
+                            sx={{
+                                width: "50%", 
+                                "fieldset": {
+                                    borderStyle: "solid none",
+                                    borderRadius: "0 0 0 0",
+                                    borderColor: "var(--primary)",
+                                    top: 0
+                                },
+                                "legend": {
+                                    display: "none"
+                                },
+                                "div": {
+                                    height: "100%"
+                                }
+                            }}
+                            inputProps={{
+                                sx: {
+                                    padding: 0,
+                                    height: "100%",
+                                    textAlign: "center"
+                                }
+                            }}
+                            value={formAmount}
+                            onChange={(e) => handleAmount(e.target.value)}
+                        />
+                        <Button 
+                            variant="contained"
+                            sx={{width: "25%", padding: 1, minWidth: 0, borderRadius: "0 4px 4px 0", borderLeft: "none"}}
+                            onClick={() => handleAmount(formAmount+1)}
+                        >
+                            <ArrowRight/>
+                        </Button>
+                    </div>
+                </Grid>
 
-            <Grid item xs={3}>
-                <div class="itemPrice">
-                    {itemData && 
-                        <h4>
-                            {formatter.format(itemData.cost * formAmount)}
-                            <br />
-                            {"(" + formatter.format(itemData.cost) + " ea.)"}
-                        </h4>
-                    }
-                </div>
+                <Grid item xs={3}>
+                    <div class="itemPrice">
+                        {itemData && 
+                            <h4>
+                                {formatter.format(itemData.cost * formAmount)}
+                                <br />
+                                {"(" + formatter.format(itemData.cost) + " ea.)"}
+                            </h4>
+                        }
+                    </div>
+                </Grid>
+                
+                {/* {itemData && amount > itemData.amount && <p>WARNING: Order exceeds available stock</p>} */}
             </Grid>
-
-            <Grid item xs={1}>
-                <IconButton onClick={() => clearAmount()}>
+            <div class="closeWrapper">
+                <IconButton onClick={() => clearAmount()} sx={{margin: "auto 0"}}>
                     <Close/>
                 </IconButton>
-            </Grid>
-            
-            {/* {itemData && amount > itemData.amount && <p>WARNING: Order exceeds available stock</p>} */}
-        </Grid>
+            </div>
+        </div>
+        
     );
 }
 
