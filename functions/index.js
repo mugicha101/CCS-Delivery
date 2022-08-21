@@ -48,6 +48,10 @@ exports.transaction = functions.https.onCall(async (data={localStoreData: {}, lo
         if (JSON.stringify(data.localCartData) != JSON.stringify(cart)) return dbData;
         console.log("cart matches");
 
+        // ensure cart is not empty
+        if (Object.keys(cart).length == 0)
+            return dbData;
+
         // ensure items and amount are valid
         let totalCost = 0;
         let description="Order:";
@@ -78,7 +82,10 @@ exports.transaction = functions.https.onCall(async (data={localStoreData: {}, lo
         for (let id in cart) {
             let amount = cart[id];
             store.data[id].amount -= amount;
-            order[id] = amount;
+            order.items = {};
+            order.items[id] = amount;
+            order.complete = false;
+            order.cost = totalCost;
         }
         user.orders[time] = order;
 
@@ -95,6 +102,53 @@ exports.transaction = functions.https.onCall(async (data={localStoreData: {}, lo
     }).catch((e) => {});
     return {isSuccess: isSuccess};
 });
+
+exports.refundOrder = functions.https.onCall(async (data={uid:null, orderTime:0}, context) => {
+    if (data.uid == null) data.uid = context.auth.uid;
+    console.log(data);
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+    }
+    
+    // ensure user has perms
+    if (context.auth.uid != data.uid && getRole(context) != "service")
+        return {error: "perms not valid"}
+    
+    // refund order
+    let dbRef = admin.database().ref();
+    let isSuccess = false;
+    await dbRef.transaction(function(dbData) {
+        if (!dbData) return dbData;
+        let store = dbData.store;
+        if (!store) return dbData;
+        let user = dbData.users[data.uid];
+        if (!user) return dbData;
+        let order = user.orders[data.orderTime];
+        if (!order) return dbData;
+        // transfer stock to store
+        let totalRefund = 0;
+        let description = "Refund Order:";
+        for (let id in order.items) {
+            let amount = order.items[id];
+            totalRefund += store.data[id].cost * amount;
+            let activeId = store.active[id];
+            store.data[activeId].amount += amount;
+            description += " [" + store.data[id].name + "]x" + amount;
+        }
+        delete dbData.users[data.uid].orders[data.orderTime];
+
+        // apply balance change
+        let balanceRef = user.balance;
+        balanceChangeHelper(balanceRef, totalRefund, description, context);
+        return dbData;
+    });
+})
+
+exports.setOrderComplete = functions.https.onCall(async (data={uid:"", orderTime:0, complete:true}, context) => {
+
+})
 
 // initialized new user's data in firebase if necessary (returns user's data)
 exports.newUser = functions.https.onCall(async (data, context) => {
@@ -279,10 +333,10 @@ exports.EMULATOR_DB_SETUP = functions.https.onCall(async (data, context) => {
     admin.database().ref("store").set({
         next_id: 4,
         active: {
-            0: true,
-            1: true,
-            2: true,
-            3: true,
+            0: 0,
+            1: 1,
+            2: 2,
+            3: 3,
         },
         data: {
             0: {

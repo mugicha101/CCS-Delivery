@@ -24,6 +24,7 @@ function NavContent() {
                 <>
                     <NavButton to="../" name="HOME"/>
                     {user && <NavButton to="../store" name="STORE"/>}
+                    {user && <NavButton to="../orders" name="ORDERS"/>}
 
                     <div style={{flexGrow: 1}}/> {/*Pushes everything to the sides*/}
 

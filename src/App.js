@@ -8,6 +8,7 @@ import { getDatabase, ref, get, set, child, connectDatabaseEmulator } from "fire
 import Home from './components/Home';
 import Store from './components/store/Store';
 import Cart from './components/cart/Cart';
+import Orders from './components/orders/Orders';
 
 import {onAuthStateChanged, getAuth} from 'firebase/auth';
 
@@ -99,6 +100,7 @@ function App() {
                             <Route path="/" element={<Home />} />
                             <Route path="/store" element={<Store isLoaded={isLoaded} user={user} db={db} updateData={updateData ?? function() {}}/>} />
                             <Route path="/cart" element={<Cart isLoaded={isLoaded} user={user} userData={data} updateData={updateData ?? function() {}}/>} />
+                            <Route path="/orders" element={<Orders isLoaded={isLoaded} user={user} userData={data} updateData={updateData ?? function() {}}/>} />
                             <Route path="/balance_editor" element={<UserBalanceEditor user={user} userData={data}/>} />
                             <Route path="/role_editor" element={<UserRoleEditor user={user} userData={data}></UserRoleEditor>} />
                         </Routes>

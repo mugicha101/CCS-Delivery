@@ -23,7 +23,8 @@ function Store({isLoaded, user, db, updateData}) {
                     let store = snapshot.val();
                     let prods = {};
                     for (let id in store.active) {
-                        prods[id] = store.data[id];
+                        if (store.active[id] == id)
+                            prods[id] = store.data[id];
                     }
                     setProducts(prods);
                 } else {

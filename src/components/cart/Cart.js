@@ -48,7 +48,7 @@ function Cart({ open, setOpen }) {
     for (let i = 0; i < cartList.length; i++) {
         let p = cartList[i];
         totalCost += storeData && storeData.data && p.id in storeData.data? storeData.data[p.id].cost * p.amount : 0;
-        if (!storeData || !storeData.data || !(p.id in storeData.data) || !(p.id in storeData.active)|| storeData.data[p.id].amount < p.amount)
+        if (!storeData || !storeData.data || !(p.id in storeData.data) || !(p.id in storeData.active) || !(storeData.active[p.id] == p.id) || storeData.data[p.id].amount < p.amount)
             valid = false;
     }
 
@@ -59,8 +59,9 @@ function Cart({ open, setOpen }) {
 
     let onClick = async () => {
         setWaiting((prev) => prev+1);
-        await transaction({localStoreData: storeData, localCartData: data.cart});
+        console.log(await transaction({localStoreData: storeData, localCartData: data.cart}));
         await updateData();
+        await loadStore();
         setWaiting((prev) => prev-1);
     }
 
