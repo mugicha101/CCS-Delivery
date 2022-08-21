@@ -3,7 +3,6 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 
 function OrderEntry({time=0, data={}, storeData={}, updateData=function() {}, waiting=false, setWaiting=function() {}}) {
-    const auth = getAuth();
     const refundOrder = httpsCallable(useContext(UserContext).functions, 'refundOrder');
 
     if (storeData == null || storeData.data == null)
@@ -36,6 +35,7 @@ function OrderEntry({time=0, data={}, storeData={}, updateData=function() {}, wa
                 return <p>{item.name} x{amount} {formatter.format(item.cost * amount)} {amount > 1 && "(" + (formatter.format(item.cost) + " each)")}</p>
             })}
             <p>Total Cost: {formatter.format(totalCost)}</p>
+            <p>Status: {data.complete? "Complete" : "In Progress"}</p>
             <button disabled={waiting} onClick={(e) => {e.preventDefault(); handleRefund();}}>Refund</button>
         </div>)
 }
