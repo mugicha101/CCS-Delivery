@@ -79,10 +79,10 @@ exports.transaction = functions.https.onCall(async (data={localStoreData: {}, lo
             time = Date.now();
         }
         let order = {};
+        order.items = {};
         for (let id in cart) {
             let amount = cart[id];
             store.data[id].amount -= amount;
-            order.items = {};
             order.items[id] = amount;
             order.complete = false;
             order.cost = totalCost;
