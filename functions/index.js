@@ -146,8 +146,66 @@ exports.refundOrder = functions.https.onCall(async (data={uid:null, orderTime:0}
     });
 })
 
-exports.setOrderComplete = functions.https.onCall(async (data={uid:"", orderTime:0, complete:true}, context) => {
+// TODO: test editItem and setOrderComplete
+// edit item, put edited item to new item id, set new item id to active item id (or make new item if new data)
+exports.editItem = functions.https.onCall(async (data={itemId:null, newData: {}}) => {
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+        'while authenticated.');
+    }
 
+    // ensure user has perms
+    if (context.auth.uid != data.uid && getRole(context) != "service")
+        return {error: "perms not valid"}
+
+    // perform transaction
+    let dataRef = admin.database().ref("store");
+    dataRef.transaction(function(value) {
+        if (!value || !value.items || !value.active) return;
+
+        // check if old version exists
+        let oldData = null;
+        if (itemId != null && itemId in value.items) {
+            oldData = value[itemId];
+        }
+
+        // check if old version matches data (no need to create new version)
+        if (oldData && JSON.stringify(oldData) == JSON.stringify(data.newData)) return {result: "new data matches old data, no change made"};
+
+        // create new item
+        value.items[value.next_id] = data.newData;
+
+        // change old item to point to new item in active (UnionFind structure)
+        if (oldData) {
+            for (let id in data.active) {
+                if (data.active[id] == data.itemId)
+                    data.active[id] = value.next_id;
+            }
+        }
+        value.next_id++;
+    })
+})
+
+// sets order complete status
+exports.setOrderComplete = functions.https.onCall(async (data={uid:"", orderTime:0, complete:true}, context) => {
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+        'while authenticated.');
+    }
+
+    // validate role
+    let role = await getRole(context);
+    if (role == null || role != "service")
+        return {error: "role not valid"};
+
+    // change order status
+    let dataRef = admin.database().ref("users/" + data.uid + "/orders/" + orderTime);
+    dataRef.transaction(function(value) {
+        if (!value) return value;
+        value.complete = data.complete;
+    })
 })
 
 // initialized new user's data in firebase if necessary (returns user's data)
@@ -312,6 +370,15 @@ exports.EMULATOR_DB_SETUP = functions.https.onCall(async (data, context) => {
         rUz2T7OHKwcB3RptZoMsw4lYl9Y2: {
             name: "Alexander Yoshida",
             role: "accountant",
+            orders: {
+                1659903206024: {
+                    items: {
+                        0: 1,
+                        1: 3
+                    },
+                    complete: false
+                }
+            },
             balance: {
                 amount: 900,
                 records: {
